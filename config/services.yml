@@ -1,0 +1,8 @@
+services:
+    mundophpbb.topictranslatesingle.listener:
+        class: mundophpbb\topictranslatesingle\event\main_listener
+        arguments:
+            - '@config'
+            - '@template'
+        tags:
+            - { name: event.listener }

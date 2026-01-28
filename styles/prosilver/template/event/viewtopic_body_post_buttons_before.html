@@ -1,0 +1,34 @@
+<style>
+    /* Cores dos botões */
+    .btn-translate-custom i { color: #3498db !important;max-width: 100%;; } /* Azul */
+    .btn-reset-custom i { color: #e74c3c !important;max-width: 100%; }    /* Vermelho */
+
+    /* Posicionamento do menu de idiomas */
+    .gtranslate_wrapper {
+        display: none;
+        position: absolute !important;
+        right: 0;
+        top: 30px;
+        z-index: 9999 !important;
+        background: #fff !important;
+        border: 1px solid #ccc !important;
+        padding: 5px !important;
+        border-radius: 4px !important;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2) !important;
+        min-width: 150px;
+
+.hasjs .postbody .post-buttons {
+    max-width: 100%;
+}
+    }
+</style>
+
+<li style="position: relative; display: inline-block;">
+    <a href="javascript:void(0);" class="button button-icon-only btn-translate-custom" title="Traduzir este post" onclick="abrirTradutor(this)">
+        <i class="icon fa-language fa-fw" aria-hidden="true"></i>
+    </a>
+    <a href="javascript:void(0);" class="button button-icon-only btn-reset-custom" title="Voltar ao idioma original" onclick="resetarTradutor(this)">
+        <i class="icon fa-undo fa-fw" aria-hidden="true"></i>
+    </a>
+    <div class="gtranslate_wrapper"></div>
+</li>

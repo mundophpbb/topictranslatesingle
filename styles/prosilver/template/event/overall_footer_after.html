@@ -1,0 +1,149 @@
+<style>
+    /* Estilização do Banner de Créditos */
+    .gtranslate-footer-credit {
+        text-align: center;
+        padding: 15px;
+        font-family: sans-serif;
+    }
+
+    .gt-badge {
+        display: inline-flex;
+        align-items: center;
+        background: #f8f9fa;
+        border: 1px solid #dadce0;
+        padding: 5px 12px;
+        border-radius: 20px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .gt-badge:hover {
+        background: #fff;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        border-color: #4285f4;
+    }
+
+    .gt-text {
+        color: #5f6368;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .gt-g { color: #4285F4; } .gt-o1 { color: #EA4335; } 
+    .gt-o2 { color: #FBBC05; } .gt-l { color: #34A853; }
+    .gt-e { color: #EA4335; }
+</style>
+
+<div class="gtranslate-footer-credit">
+    <a href="https://gtranslate.io" target="_blank" rel="nofollow" class="gt-badge">
+        <span class="gt-text">Powered by </span>
+        <span style="margin-left: 5px; font-weight: bold; font-size: 14px;">
+            <span class="gt-g">G</span><span class="gt-o1">o</span><span class="gt-o2">o</span><span class="gt-g">g</span><span class="gt-l">l</span><span class="gt-e">e</span> 
+            <span style="color: #676767;">Translate</span>
+        </span>
+    </a>
+</div>
+
+<script>
+window.gtranslateSettings = {
+    "default_language": "{{ GTRANSLATE_DEFAULT_LANGUAGE }}",
+    "languages": {{ GTRANSLATE_LANGUAGES_JSON|raw }},
+    "wrapper_selector": ".gtranslate_wrapper",
+    "flag_size": 16,
+    "switcher_horizontal_position": "inline",
+    "flag_style": "3d"
+}
+
+// Função para garantir a formatação de quebra de linha após tradução
+function fixTranslationLayout() {
+    document.querySelectorAll('.post-content-area.translate').forEach(area => {
+        // 1. Força o CSS novamente
+        // area.style.display = "block";
+        // area.style.whiteSpace = "pre-wrap";
+
+        // 2. Se o Google removeu os <br>, tentamos restaurar o layout
+        // Este comando procura por blocos de texto que o Google Translate 
+        // costuma colocar dentro de tags <font> ou <span> e força a quebra
+        const fonts = area.querySelectorAll('font, span');
+        fonts.forEach(f => {
+            if (f.innerText.length > 0) {
+                f.style.display = "inline-block";
+                f.style.width = "100%"; // Força a ocupação da linha toda
+                f.style.marginBottom = "5px"; // Cria um respiro entre linhas
+            }
+        });
+    });
+}
+
+// Observador para detectar mudanças do Google Translate no HTML
+const translationObserver = new MutationObserver((mutations) => {
+    mutations.forEach(() => fixTranslationLayout());
+});
+translationObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+
+function limparCookiesGTranslate() {
+    const domains = [window.location.hostname, "." + window.location.hostname, document.domain];
+    domains.forEach(domain => {
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + domain + ";";
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    });
+}
+
+function resetarTradutor(btn) {
+    limparCookiesGTranslate();
+    const defaultLang = window.gtranslateSettings.default_language;
+    const resetValue = defaultLang + '|' + defaultLang;
+    const selector = document.querySelector('select.gt_selector');
+    
+    if (selector) {
+        selector.value = resetValue;
+        selector.dispatchEvent(new Event('change'));
+        if (typeof doGTranslate === 'function') doGTranslate(resetValue);
+    } else {
+        location.reload();
+    }
+    
+    document.querySelectorAll('.post-content-area').forEach(area => {
+        area.classList.remove('translate');
+        area.classList.add('notranslate');
+        area.style.whiteSpace = ""; // Remove o pre-wrap forçado ao resetar
+    });
+    
+    document.querySelectorAll('.gtranslate_wrapper').forEach(el => el.style.display = 'none');
+}
+
+function abrirTradutor(btn) {
+    limparCookiesGTranslate();
+    document.querySelectorAll('.gtranslate_wrapper').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.post-content-area').forEach(area => {
+        area.classList.add('notranslate');
+        area.classList.remove('translate');
+    });
+    
+    const wrapper = btn.parentNode.querySelector('.gtranslate_wrapper');
+    const postArea = btn.closest('.postbody').querySelector('.post-content-area');
+    
+    if (wrapper) {
+        wrapper.style.display = 'block';
+        wrapper.onclick = function() {
+            setTimeout(() => { wrapper.style.display = 'none'; }, 800);
+        };
+
+        const selector = wrapper.querySelector('select.gt_selector');
+        if (selector && !selector.dataset.autoApplied) {
+            Array.from(selector.options).forEach(option => {
+                const parts = option.value.split('|');
+                if (parts.length === 2) option.value = 'auto|' + parts[1];
+            });
+            selector.dataset.autoApplied = "true";
+        }
+    }
+    
+    if (postArea) {
+        postArea.classList.remove('notranslate');
+        postArea.classList.add('translate');
+        fixTranslationLayout();
+    }
+}
+</script>
+<script src="https://cdn.gtranslate.net/widgets/latest/dwf.js" defer></script>

@@ -1,0 +1,36 @@
+{% INCLUDE 'overall_header.html' %}
+
+<h1>{{ lang('ACP_TOPICTRANSLATESINGLE_TITLE') }}</h1>
+
+<form id="acp_board" method="post" action="{{ U_ACTION }}">
+    <fieldset>
+        <dl>
+            <dt><label for="default_language">{{ lang('ACP_TOPICTRANSLATESINGLE_DEFAULT_LANGUAGE') }}</label><br /><span>{{ lang('ACP_TOPICTRANSLATESINGLE_DEFAULT_LANGUAGE_EXPLAIN') }}</span></dt>
+            <dd>
+                <select name="default_language" id="default_language">
+                    {% for lang in languages %}
+                        <option value="{{ lang.CODE }}" {% if lang.CODE == DEFAULT_LANGUAGE %}selected="selected"{% endif %}>{{ lang.NAME }}</option>
+                    {% endfor %}
+                </select>
+            </dd>
+        </dl>
+        <dl>
+            <dt><label for="languages">{{ lang('ACP_TOPICTRANSLATESINGLE_LANGUAGES') }}</label><br /><span>{{ lang('ACP_TOPICTRANSLATESINGLE_LANGUAGES_EXPLAIN') }}</span></dt>
+            <dd>
+                <select name="languages[]" id="languages" multiple="multiple" size="10">
+                    {% for lang in languages %}
+                        <option value="{{ lang.CODE }}" {% if lang.SELECTED %}selected="selected"{% endif %}>{{ lang.NAME }}</option>
+                    {% endfor %}
+                </select>
+            </dd>
+        </dl>
+        <p class="submit-buttons">
+            <input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+            <input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+        </p>
+
+        {{ S_FORM_TOKEN }}
+    </fieldset>
+</form>
+
+{% INCLUDE 'overall_footer.html' %}
