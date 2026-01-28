@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "Tradução individual de posts via GTranslate",
     "homepage": "https://mundophpbb.com.br",
-    "version": "1.0.0 Beta",
+    "version": "1.1.0 Beta",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
