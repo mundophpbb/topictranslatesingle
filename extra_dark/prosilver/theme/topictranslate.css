@@ -1,0 +1,90 @@
+/* Botões de tradução - Cores e ícones */
+.btn-translate-custom i { color: #5dade2 !important; } /* Azul levemente mais claro para destaque no dark */
+.btn-reset-custom i { color: #ec7063 !important; }    /* Vermelho levemente mais claro */
+
+/* Ajuste de largura para os botões do post */
+.hasjs .postbody .post-buttons {
+    max-width: 100%;
+}
+
+/* Menu de idiomas (dropdown) - TEMA ESCURO */
+.gtranslate_wrapper {
+    display: none; 
+    position: absolute !important;
+    right: 0 !important;
+    top: 30px !important;
+    z-index: 9999 !important;
+    background: #2c2c2c !important; /* Cinza escuro */
+    border: 1px solid #444 !important;    /* Borda discreta */
+    padding: 5px !important;
+    border-radius: 4px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important; /* Sombra mais densa */
+    min-width: 150px !important;
+}
+
+.gtranslate_wrapper select {
+    background: #3d3d3d !important; /* Fundo do select */
+    color: #e0e0e0 !important;      /* Texto claro */
+    border: 1px solid #555 !important;
+    font-size: 11px !important;
+    height: 22px !important;
+    cursor: pointer !important;
+}
+
+/* Estilos para conteúdo traduzido e correção de quebras */
+.post-content-area,
+.post-content-area * {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+    line-height: 1.4 !important;
+}
+
+.post-content-area.translate {
+    display: block !important;
+    border-left: 3px solid #2ecc71 !important; /* Verde esmeralda para o destaque */
+    padding-left: 10px !important;
+    margin: 10px 0 !important;
+    overflow: hidden !important;
+}
+
+.post-content-area.translate p, 
+.post-content-area.translate div {
+    display: block !important;
+    margin: 0 0 1em 0 !important;
+}
+
+/* Esconde elementos vazios gerados pela tradução */
+.post-content-area.translate :empty,
+.post-content-area.translate br:last-child {
+    display: none !important;
+}
+
+/* Estilização do Banner de Créditos (Rodapé) - TEMA ESCURO */
+.gtranslate-footer-credit {
+    text-align: center;
+    padding: 15px;
+    font-family: sans-serif;
+}
+
+.gt-badge {
+    display: inline-flex;
+    align-items: center;
+    background: #1e1e1e;           /* Fundo escuro profundo */
+    border: 1px solid #333;        /* Borda sutil */
+    padding: 5px 12px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.gt-badge:hover { 
+    background: #252525; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4); 
+    border-color: #4285f4; 
+}
+
+.gt-text { color: #bbbbbb; font-size: 12px; font-weight: 500; }
+.gt-g { color: #4285F4; } .gt-o1 { color: #EA4335; } 
+.gt-o2 { color: #FBBC05; } .gt-l { color: #34A853; }
+.gt-e { color: #EA4335; }
