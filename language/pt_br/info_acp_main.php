@@ -21,4 +21,5 @@ $lang = array_merge($lang, [
     'ACP_TOPICTRANSLATESINGLE_LANGUAGES'        => 'Idiomas Disponíveis (languages)',
     'ACP_TOPICTRANSLATESINGLE_LANGUAGES_EXPLAIN' => 'Selecione vários idiomas para o menu (Ctrl+clique).',
     'ACP_TOPICTRANSLATESINGLE_SETTING_SAVED'    => 'Configurações salvas com sucesso!',
+    'ACP_TOPICTRANSLATESINGLE_LANGUAGES_TIP' => 'Os idiomas mais comuns já vêm pré-selecionados por padrão. A maioria dos fóruns usa menos de 15 idiomas. Idiomas menos comuns/raros estão no final da lista.',
 ]);

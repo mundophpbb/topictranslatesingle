@@ -1,97 +1,124 @@
 <div class="gtranslate-footer-credit">
     <a href="https://gtranslate.io" target="_blank" rel="nofollow" class="gt-badge">
-        <span class="gt-text">{L_TOPIC_TRANSLATE_POWERED} </span>
+        <span class="gt-text">{{ lang('TOPIC_TRANSLATE_POWERED') }} </span>
         <span style="margin-left: 5px; font-weight: bold; font-size: 14px;">
-            <span class="gt-g">G</span><span class="gt-o1">o</span><span class="gt-o2">o</span><span class="gt-g">g</span><span class="gt-l">l</span><span class="gt-e">e</span> 
+            <span class="gt-g">G</span><span class="gt-o1">o</span><span class="gt-o2">o</span><span class="gt-g">g</span><span class="gt-l">l</span><span class="gt-e">e</span>
             <span style="color: #676767;">Translate</span>
         </span>
     </a>
 </div>
 
 <script>
-window.gtranslateSettings = {
-    "default_language": "{{ GTRANSLATE_DEFAULT_LANGUAGE }}",
-    "languages": {{ GTRANSLATE_LANGUAGES_JSON|raw }},
-    "wrapper_selector": ".gtranslate_wrapper",
-    "flag_size": 16,
-    "switcher_horizontal_position": "inline",
-    "flag_style": "3d"
-}
+    // Configuração segura com fallback
+    window.gtranslateSettings = {
+        "default_language": "{{ GTRANSLATE_DEFAULT_LANGUAGE|default('en') }}",
+        "languages": {{ GTRANSLATE_LANGUAGES_JSON|raw|default('["en"]') }},
+        "wrapper_selector": ".gtranslate_wrapper",
+        "flag_size": 16,
+        "switcher_horizontal_position": "inline",
+        "flag_style": "3d"
+    };
 
-function fixTranslationLayout() {
-    document.querySelectorAll('.post-content-area.translate').forEach(area => {
-        area.querySelectorAll('font, span').forEach(f => {
-            if (f.innerText.trim().length > 0) {
-                f.style.display = "inline-block";
-                f.style.width = "100%"; 
-                f.style.marginBottom = "5px";
-            }
-        });
-    });
-}
-
-const translationObserver = new MutationObserver(() => fixTranslationLayout());
-translationObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
-
-function limparCookiesGTranslate() {
-    const domains = [window.location.hostname, "." + window.location.hostname, document.domain];
-    domains.forEach(domain => {
-        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + domain + ";";
-        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    });
-}
-
-function resetarTradutor(btn) {
-    limparCookiesGTranslate();
-    const defaultLang = window.gtranslateSettings.default_language;
-    const resetValue = defaultLang + '|' + defaultLang;
-    const selector = document.querySelector('select.gt_selector');
-    
-    if (selector) {
-        selector.value = resetValue;
-        selector.dispatchEvent(new Event('change'));
-        if (typeof doGTranslate === 'function') doGTranslate(resetValue);
-    } else {
-        location.reload();
+    // Fallback robusto no JS
+    if (!Array.isArray(window.gtranslateSettings.languages) || window.gtranslateSettings.languages.length === 0) {
+        window.gtranslateSettings.languages = ["en"];
     }
-    
-    document.querySelectorAll('.post-content-area').forEach(area => {
-        area.classList.replace('translate', 'notranslate');
-        area.style.whiteSpace = "";
-    });
-    document.querySelectorAll('.gtranslate_wrapper').forEach(el => el.style.display = 'none');
-}
+    if (!window.gtranslateSettings.languages.includes(window.gtranslateSettings.default_language)) {
+        window.gtranslateSettings.default_language = window.gtranslateSettings.languages[0];
+    }
 
-function abrirTradutor(btn) {
-    limparCookiesGTranslate();
-    document.querySelectorAll('.gtranslate_wrapper').forEach(el => el.style.display = 'none');
-    document.querySelectorAll('.post-content-area').forEach(area => {
-        area.classList.add('notranslate');
-        area.classList.remove('translate');
-    });
-    
-    const wrapper = btn.parentNode.querySelector('.gtranslate_wrapper');
-    const postArea = btn.closest('.postbody').querySelector('.post-content-area');
-    
-    if (wrapper) {
-        wrapper.style.display = 'block';
-        wrapper.onclick = () => setTimeout(() => { wrapper.style.display = 'none'; }, 800);
-
-        const selector = wrapper.querySelector('select.gt_selector');
-        if (selector && !selector.dataset.autoApplied) {
-            Array.from(selector.options).forEach(opt => {
-                const parts = opt.value.split('|');
-                if (parts.length === 2) opt.value = 'auto|' + parts[1];
+    function fixTranslationLayout() {
+        document.querySelectorAll('.post-content-area.translate').forEach(area => {
+            area.querySelectorAll('font, span').forEach(f => {
+                if (f.innerText.trim().length > 0) {
+                    f.style.display = "inline-block";
+                    f.style.width = "100%";
+                    f.style.marginBottom = "5px";
+                }
             });
-            selector.dataset.autoApplied = "true";
+        });
+    }
+
+    const translationObserver = new MutationObserver(() => fixTranslationLayout());
+    translationObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+
+    // Novo: retry automático para traduções lentas (Korean, Polish, etc.)
+    let fixInterval = null;
+    function startFixRetry() {
+        if (fixInterval) clearInterval(fixInterval);
+        fixTranslationLayout(); // imediato
+        fixInterval = setInterval(fixTranslationLayout, 800); // a cada 800ms
+        setTimeout(() => {
+            if (fixInterval) clearInterval(fixInterval);
+        }, 10000); // para após 10 segundos (aumentado para mais segurança)
+    }
+
+    function limparCookiesGTranslate() {
+        const domains = [window.location.hostname, "." + window.location.hostname, document.domain];
+        domains.forEach(domain => {
+            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + domain + ";";
+            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        });
+    }
+
+    function resetarTradutor(btn) {
+        limparCookiesGTranslate();
+        if (fixInterval) clearInterval(fixInterval);
+
+        const defaultLang = window.gtranslateSettings.default_language;
+        const resetValue = defaultLang + '|' + defaultLang;
+        const selector = document.querySelector('select.gt_selector');
+       
+        if (selector) {
+            selector.value = resetValue;
+            selector.dispatchEvent(new Event('change'));
+            if (typeof doGTranslate === 'function') doGTranslate(resetValue);
+        } else {
+            location.reload();
+        }
+       
+        document.querySelectorAll('.post-content-area').forEach(area => {
+            area.classList.replace('translate', 'notranslate');
+            area.style.whiteSpace = "";
+        });
+        document.querySelectorAll('.gtranslate_wrapper').forEach(el => el.style.display = 'none');
+    }
+
+    function abrirTradutor(btn) {
+        limparCookiesGTranslate();
+        document.querySelectorAll('.gtranslate_wrapper').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.post-content-area').forEach(area => {
+            area.classList.add('notranslate');
+            area.classList.remove('translate');
+        });
+       
+        const wrapper = btn.parentNode.querySelector('.gtranslate_wrapper');
+        const postArea = btn.closest('.postbody').querySelector('.post-content-area');
+       
+        if (wrapper) {
+            wrapper.style.display = 'block';
+            // Timeout aumentado para 1500ms (mais tempo para o usuário escolher idioma)
+            wrapper.onclick = () => setTimeout(() => { wrapper.style.display = 'none'; }, 1500);
+
+            const selector = wrapper.querySelector('select.gt_selector');
+            if (selector && !selector.dataset.autoApplied) {
+                Array.from(selector.options).forEach(opt => {
+                    const parts = opt.value.split('|');
+                    if (parts.length === 2) opt.value = 'auto|' + parts[1];
+                });
+                selector.dataset.autoApplied = "true";
+            }
+
+            // Inicia retry ao abrir o tradutor
+            startFixRetry();
+        }
+       
+        if (postArea) {
+            postArea.classList.remove('notranslate');
+            postArea.classList.add('translate');
+            // Inicia retry ao ativar a tradução
+            startFixRetry();
         }
     }
-    
-    if (postArea) {
-        postArea.classList.remove('notranslate');
-        postArea.classList.add('translate');
-        fixTranslationLayout();
-    }
-}
 </script>
 <script src="https://cdn.gtranslate.net/widgets/latest/dwf.js" defer></script>

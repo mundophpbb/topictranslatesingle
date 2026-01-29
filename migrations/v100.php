@@ -1,5 +1,4 @@
 <?php
-
 namespace mundophpbb\topictranslatesingle\migrations;
 
 class v100 extends \phpbb\db\migration\migration
@@ -9,7 +8,7 @@ class v100 extends \phpbb\db\migration\migration
         return $this->config->offsetExists('topictranslatesingle_default_language');
     }
 
-    static public function depends_on()
+    public static function depends_on()
     {
         return ['\phpbb\db\migration\data\v31x\v314'];
     }
@@ -18,20 +17,48 @@ class v100 extends \phpbb\db\migration\migration
     {
         return [
             ['config.add', ['topictranslatesingle_default_language', 'en']],
-            ['config.add', ['topictranslatesingle_languages', serialize(['en', 'pt', 'es', 'fr', 'de', 'it', 'ru', 'ja', 'zh-CN', 'ar', 'nl', 'pl', 'sv'])]],
+            ['config.add', ['topictranslatesingle_languages', json_encode(['en', 'pt', 'es', 'fr', 'de', 'it', 'ru', 'ja', 'zh-CN', 'ar', 'hi', 'ko', 'nl', 'pl'])]],
+
+            // Categoria principal
             ['module.add', [
                 'acp',
                 'ACP_CAT_DOT_MODS',
                 'ACP_TOPICTRANSLATESINGLE_TITLE'
             ]],
+
+            // Módulo de configurações
             ['module.add', [
                 'acp',
                 'ACP_TOPICTRANSLATESINGLE_TITLE',
                 [
                     'module_basename' => '\mundophpbb\topictranslatesingle\acp\main_module',
-                    'modes'            => ['settings'],
+                    'modes'           => ['settings'],
                 ],
             ]],
+        ];
+    }
+
+    public function revert_data()
+    {
+        return [
+            // Remove na ordem inversa: primeiro o modo, depois a categoria
+            ['module.remove', [
+                'acp',
+                'ACP_TOPICTRANSLATESINGLE_TITLE',
+                [
+                    'module_basename' => '\mundophpbb\topictranslatesingle\acp\main_module',
+                    'modes'           => ['settings'],
+                ],
+            ]],
+
+            ['module.remove', [
+                'acp',
+                'ACP_CAT_DOT_MODS',
+                'ACP_TOPICTRANSLATESINGLE_TITLE'
+            ]],
+
+            ['config.remove', ['topictranslatesingle_languages']],
+            ['config.remove', ['topictranslatesingle_default_language']],
         ];
     }
 }
