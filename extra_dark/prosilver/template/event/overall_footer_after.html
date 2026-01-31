@@ -8,14 +8,46 @@
     </a>
 </div>
 
-<div class="gtranslate_wrapper"></div>
-
 <script>
-    // Configuração separada por linhas para melhor leitura e manutenção
-    window.gtranslateSettings = {
-        "default_language": "{{ GTRANSLATE_DEFAULT_LANGUAGE|default('en') }}",
-        "languages": {{ GTRANSLATE_LANGUAGES_JSON|raw|default('["en"]') }},
-        "wrapper_selector": ".gtranslate_wrapper",
+document.addEventListener("DOMContentLoaded", () => {
+    // Função para adicionar o label "Translate" como opção selecionada (melhor visual no widget)
+    function addTranslateLabel(wrapper) {
+        if (!wrapper) return;
+        if (wrapper.querySelector(".gt_label_translate")) return;
+
+        const first = wrapper.querySelector("a, li, div");
+        if (!first) return;
+
+        const tag = first.tagName.toLowerCase();
+        const label = document.createElement(tag);
+        label.textContent = "{L_TRANSLATE}";
+        label.className = "gt_label_translate gt-box";
+        label.addEventListener("click", e => e.stopPropagation());
+
+        wrapper.insertBefore(label, wrapper.firstChild);
+
+        // Remove classes de seleção dos itens reais e marca o label como selected
+        const selected = wrapper.querySelector(".selected, .active, .glink-selected");
+        if (selected) selected.classList.remove("selected", "active", "glink-selected");
+        label.classList.add("selected");
+    }
+
+    // Aplica o label em todos os wrappers e observa mudanças
+    const wrappers = document.querySelectorAll(".gtranslate_wrapper");
+    wrappers.forEach(wrapper => {
+        const obs = new MutationObserver(() => addTranslateLabel(wrapper));
+        obs.observe(wrapper, { childList: true, subtree: true });
+        addTranslateLabel(wrapper);
+    });
+});
+
+// overall_footer_after.html
+window.gtranslateSettings = {
+    "default_language": "{{ GTRANSLATE_DEFAULT_LANGUAGE|default('en') }}",
+    "native_language_names": {{ GTRANSLATE_NATIVE_NAMES ? 'true' : 'false' }},
+    "detect_browser_language": {{ GTRANSLATE_DETECT_BROWSER ? 'true' : 'false' }},
+    "languages": {{ GTRANSLATE_LANGUAGES_JSON|raw|default('["en"]') }},
+    "wrapper_selector": ".gtranslate_wrapper",
         "flag_size": 16,
         "switcher_horizontal_position": "inline",
         "flag_style": "3d",
@@ -28,82 +60,107 @@
         "dropdown_text_color": "#eaeaea",
         "dropdown_hover_color": "#748393",
         "dropdown_background_color": "#474747"
-    };
+};
 
-    // Fallback e Lógica de ativação (mantendo o que já funciona)
-    if (!Array.isArray(window.gtranslateSettings.languages) || window.gtranslateSettings.languages.length === 0) {
-        window.gtranslateSettings.languages = ["en"];
+// Fallback robusto
+if (!Array.isArray(window.gtranslateSettings.languages) || window.gtranslateSettings.languages.length === 0) {
+    window.gtranslateSettings.languages = ["en"];
+}
+if (!window.gtranslateSettings.languages.includes(window.gtranslateSettings.default_language)) {
+    window.gtranslateSettings.default_language = window.gtranslateSettings.languages[0];
+}
+
+// Correção de layout pós-tradução (defensivo)
+function fixTranslationLayout() {
+    document.querySelectorAll(".post-content-area.translate").forEach(area => {
+        const content = area.querySelector(".content") || area;
+        content.querySelectorAll("font, span").forEach(f => {
+            if (f.innerText.trim().length > 0) {
+                f.style.display = "inline-block";
+                f.style.width = "100%";
+                f.style.marginBottom = "5px";
+            }
+        });
+    });
+}
+
+const translationObserver = new MutationObserver(() => fixTranslationLayout());
+translationObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+
+// Retry automático para traduções lentas
+let fixInterval = null;
+function startFixRetry() {
+    if (fixInterval) clearInterval(fixInterval);
+    fixTranslationLayout();
+    fixInterval = setInterval(fixTranslationLayout, 800);
+    setTimeout(() => {
+        if (fixInterval) clearInterval(fixInterval);
+    }, 10000);
+}
+
+function limparCookiesGTranslate() {
+    const domains = [window.location.hostname, "." + window.location.hostname, document.domain];
+    domains.forEach(domain => {
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + domain + ";";
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    });
+}
+
+function resetarTradutor(btn) {
+    limparCookiesGTranslate();
+    if (fixInterval) clearInterval(fixInterval);
+
+    const defaultLang = window.gtranslateSettings.default_language;
+    const resetValue = defaultLang + "|" + defaultLang;
+    const selector = document.querySelector("select.gt_selector");
+
+    if (selector) {
+        selector.value = resetValue;
+        selector.dispatchEvent(new Event("change"));
+        if (typeof doGTranslate === "function") doGTranslate(resetValue);
+    } else {
+        location.reload();
     }
 
-    function fixTranslationLayout() {
-        document.querySelectorAll('.post-content-area.translate').forEach(area => {
-            area.querySelectorAll('font, span').forEach(f => {
-                if (f.innerText.trim().length > 0) {
-                    f.style.display = "inline-block";
-                    f.style.width = "100%";
-                    f.style.marginBottom = "5px";
-                }
+    document.querySelectorAll(".post-content-area").forEach(area => {
+        area.classList.replace("translate", "notranslate");
+        area.style.whiteSpace = "";
+    });
+    document.querySelectorAll(".gtranslate_wrapper").forEach(el => el.style.display = "none");
+}
+
+function abrirTradutor(btn) {
+    limparCookiesGTranslate();
+    document.querySelectorAll(".gtranslate_wrapper").forEach(el => el.style.display = "none");
+    document.querySelectorAll(".post-content-area").forEach(area => {
+        area.classList.add("notranslate");
+        area.classList.remove("translate");
+    });
+
+    const wrapper = btn.parentNode.querySelector(".gtranslate_wrapper");
+    const postArea = btn.closest(".postbody").querySelector(".post-content-area");
+
+    if (wrapper) {
+        wrapper.style.display = "block";
+        wrapper.onclick = () => setTimeout(() => { wrapper.style.display = "none"; }, 1500);
+
+        const selector = wrapper.querySelector("select.gt_selector");
+        if (selector && !selector.dataset.autoApplied) {
+            Array.from(selector.options).forEach(opt => {
+                const parts = opt.value.split("|");
+                if (parts.length === 2) opt.value = "auto|" + parts[1];
             });
-        });
-    }
-
-    const translationObserver = new MutationObserver(() => fixTranslationLayout());
-    translationObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
-
-    let fixInterval = null;
-    function startFixRetry() {
-        if (fixInterval) clearInterval(fixInterval);
-        fixTranslationLayout();
-        fixInterval = setInterval(fixTranslationLayout, 800);
-        setTimeout(() => { if (fixInterval) clearInterval(fixInterval); }, 10000);
-    }
-
-    function limparCookiesGTranslate() {
-        const domains = [window.location.hostname, "." + window.location.hostname, document.domain];
-        domains.forEach(domain => {
-            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + domain + ";";
-            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        });
-    }
-
-    function resetarTradutor(btn) {
-        limparCookiesGTranslate();
-        if (fixInterval) clearInterval(fixInterval);
-        const defaultLang = window.gtranslateSettings.default_language;
-        const resetValue = defaultLang + '|' + defaultLang;
-        const selector = document.querySelector('select.gt_selector');
-        if (selector) {
-            selector.value = resetValue;
-            selector.dispatchEvent(new Event('change'));
-            if (typeof doGTranslate === 'function') doGTranslate(resetValue);
-        } else {
-            location.reload();
+            selector.dataset.autoApplied = "true";
         }
-        document.querySelectorAll('.post-content-area').forEach(area => {
-            area.classList.replace('translate', 'notranslate');
-        });
-        document.querySelectorAll('.gtranslate_wrapper').forEach(el => el.style.display = 'none');
+        startFixRetry();
     }
 
-    function abrirTradutor(btn) {
-        limparCookiesGTranslate();
-        document.querySelectorAll('.gtranslate_wrapper').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('.post-content-area').forEach(area => {
-            area.classList.add('notranslate');
-            area.classList.remove('translate');
-        });
-        const wrapper = btn.parentNode.querySelector('.gtranslate_wrapper');
-        const postArea = btn.closest('.postbody').querySelector('.post-content-area');
-        if (wrapper) {
-            wrapper.style.display = 'block';
-            wrapper.onclick = () => setTimeout(() => { wrapper.style.display = 'none'; }, 1500);
-            startFixRetry();
-        }
-        if (postArea) {
-            postArea.classList.remove('notranslate');
-            postArea.classList.add('translate');
-            startFixRetry();
-        }
+    if (postArea) {
+        postArea.classList.remove("notranslate");
+        postArea.classList.add("translate");
+        startFixRetry();
     }
+}
 </script>
+
 <script src="https://cdn.gtranslate.net/widgets/latest/dwf.js" defer></script>
