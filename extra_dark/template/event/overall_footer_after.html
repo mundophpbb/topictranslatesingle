@@ -20,10 +20,18 @@
         "native_language_names": {{ GTRANSLATE_NATIVE_NAMES ? 'true' : 'false' }},
         "detect_browser_language": {{ GTRANSLATE_DETECT_BROWSER ? 'true' : 'false' }},
         "languages": {{ GTRANSLATE_LANGUAGES_JSON|raw|default('["en"]') }},
-        "wrapper_selector": ".gtranslate_wrapper",
-        "flag_size": 16,
-        "switcher_horizontal_position": "inline",
-        "flag_style": "3d"
+    "wrapper_selector": ".gtranslate_wrapper",
+    "flag_size": 16,
+    "switcher_horizontal_position": "inline",
+    "switcher_text_color": "#f7f7f7",
+    "switcher_arrow_color": "#f2f2f2",
+    "switcher_border_color": "#161616",
+    "switcher_background_color": "#303030",
+    "switcher_background_shadow_color": "#474747",
+    "switcher_background_hover_color": "#3a3a3a",
+    "dropdown_text_color": "#eaeaea",
+    "dropdown_hover_color": "#748393",
+    "dropdown_background_color": "#474747"
     };
 
     const dLang = window.gtranslateSettings.default_language;

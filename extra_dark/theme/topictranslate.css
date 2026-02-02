@@ -1,0 +1,120 @@
+/* Botões de tradução - Cores e ícones */
+.btn-translate-custom i { color: #5dade2 !important; } /* Um azul levemente mais claro para destacar no dark */
+.btn-reset-custom i { color: #ec7063 !important; }    /* Um vermelho mais suave */
+
+/* Ajuste de largura para os botões do post */
+.hasjs .postbody .post-buttons {
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 4px;
+}
+
+/* Menu de idiomas (dropdown) */
+.gtranslate_wrapper {
+    display: none;
+    position: absolute !important;
+    right: 0 !important;
+    top: 32px !important;
+    z-index: 10001 !important;
+    background: #1e1e1e !important;          /* Fundo Escuro */
+    border: 1px solid #333333 !important;    /* Borda discreta */
+    padding: 8px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+    min-width: 160px !important;
+}
+
+/* Select */
+.gtranslate_wrapper select {
+    font-size: 13px !important;
+    height: 28px !important;
+    cursor: pointer !important;
+    background-color: #2d2d2d !important;    /* Fundo do select */
+    color: #e0e0e0 !important;               /* Texto claro */
+    border: 1px solid #444 !important;
+    border-radius: 3px !important;
+    width: 100% !important;
+}
+
+/* Conteúdo traduzido */
+.post-content-area.translate {
+    display: block !important;
+    border-left: 4px solid #3498db !important;
+    padding-left: 15px !important;
+    margin: 10px 0 !important;
+    background: rgba(52, 152, 219, 0.05) !important; /* Opacidade leve para o azul */
+    line-height: 1.5 !important;
+    color: #d1d1d1 !important;               /* Cor do texto traduzido */
+}
+
+.post-content-area.translate img {
+    max-width: 100% !important;
+    height: auto !important;
+    opacity: 0.9;                            /* Imagens levemente menos brilhantes */
+}
+
+/* Créditos */
+.gtranslate-footer-credit {
+    text-align: center;
+    padding: 20px;
+}
+
+.gt-badge {
+    display: inline-flex;
+    align-items: center;
+    background: #262626;                     /* Fundo do badge */
+    border: 1px solid #3d3d3d;
+    padding: 6px 14px;
+    border-radius: 50px;
+    text-decoration: none;
+}
+
+/* Botão de tradução */
+.btn-translate-custom {
+    position: relative !important;
+}
+
+/* Label */
+.gt_label_translate {
+    display: block;
+    padding: 6px 10px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #bbbbbb;                          /* Texto label */
+    background: #333333;                     /* Fundo label */
+    border-radius: 4px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+    .gtranslate_wrapper {
+        position: fixed !important;
+        top: 54% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        box-shadow: 0 0 200px rgba(0,0,0,0.8) !important;
+        background: #1a1a1a !important;
+    }
+
+    .gtranslate_wrapper select {
+        font-size: 16px !important;
+        height: 45px !important;
+    }
+
+    .gt_label_translate {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+}
+
+/* Cores Google (Ajustadas para visibilidade no escuro) */
+.gt-text { color: #aaaaaa; font-size: 12px; font-weight: 500; }
+.gt-g { color: #669df6; }  /* Azul Google suavizado */
+.gt-o1 { color: #ed665b; } /* Vermelho Google suavizado */
+.gt-o2 { color: #fcc934; } /* Amarelo Google suavizado */
+.gt-l { color: #5bb974; }  /* Verde Google suavizado */
+.gt-e { color: #ed665b; }
