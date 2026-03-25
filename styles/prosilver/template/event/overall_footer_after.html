@@ -12,7 +12,7 @@
 (function () {
     "use strict";
 
-    // 1. CACHE E CONFIGURA«’ES
+    // 1. CACHE E CONFIGURA√á√ïES
     const ORIGINAL_POST_HTML = new Map();
     
     window.gtranslateSettings = {
@@ -28,7 +28,7 @@
 
     const dLang = window.gtranslateSettings.default_language;
 
-    // 2. FUN«’ES DE SUPORTE
+    // 2. FUN√á√ïES DE SUPORTE
     function limparCookies() {
         const d = window.location.hostname;
         const cookies = ["googtrans", "googtrans_ext"];
@@ -58,20 +58,20 @@
         });
     }
 
-    // 3. FUN«’ES GLOBAIS
+    // 3. FUN√á√ïES GLOBAIS
     window.resetarTradutor = function() {
         limparCookies();
         restaurarTudo();
-        // ForÁa o seletor do GTranslate a voltar para o topo
+        // For√ßa o seletor do GTranslate a voltar para o topo
         const sel = document.querySelector("select.gt_selector");
         if (sel) sel.value = dLang + "|" + dLang;
         
-        // Em casos crÌticos de "vazamento", o reload ainda È o mais seguro
+        // Em casos cr√≠ticos de "vazamento", o reload ainda √© o mais seguro
         location.reload();
     };
 
     window.abrirTradutor = function(btn) {
-        // Fecha outros menus e garante que o HTML original est· salvo
+        // Fecha outros menus e garante que o HTML original est√° salvo
         document.querySelectorAll(".gtranslate_wrapper").forEach(w => w.style.display = "none");
         
         const wrapper = btn.parentNode.querySelector(".gtranslate_wrapper");
@@ -80,7 +80,7 @@
         if (postArea) {
             salvarOriginal(postArea);
             // Antes de traduzir este, garante que os outros voltaram ao original
-            // para evitar que o cookie do Google traduza a p·gina toda
+            // para evitar que o cookie do Google traduza a p√°gina toda
             restaurarTudo(); 
 
             postArea.classList.remove("notranslate");
@@ -102,9 +102,9 @@
         }
     };
 
-    // 4. INICIALIZA«√O E EVENTOS
+    // 4. INICIALIZA√á√ÉO E EVENTOS
     document.addEventListener("DOMContentLoaded", () => {
-        // Salva o estado original de todos os posts assim que a p·gina carrega
+        // Salva o estado original de todos os posts assim que a p√°gina carrega
         document.querySelectorAll('.post-content-area, .post-body, .post-content').forEach(salvarOriginal);
 
         // Adiciona label
