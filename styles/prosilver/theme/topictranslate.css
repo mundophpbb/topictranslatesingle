@@ -137,18 +137,6 @@
 .gt-o2 { color: #FBBC05; } .gt-l { color: #34A853; }
 .gt-e { color: #EA4335; }
 
-.gtranslate_wrapper .gt_reset_button {
-    display: block;
-    width: 100%;
-    margin-top: 8px;
-    font-size: 12px;
-}
-
-.gtranslate_wrapper .gt_reset_button:hover,
-.gtranslate_wrapper .gt_reset_button:focus {
-    text-decoration: none;
-}
-
 .gtranslate_wrapper--loading select {
     opacity: 0.65;
 }

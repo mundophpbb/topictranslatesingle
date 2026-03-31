@@ -249,15 +249,6 @@
             wrapper.appendChild(repeatButton);
         }
 
-        if (!wrapper.querySelector(RESET_SELECTOR)) {
-            var resetButton = document.createElement('button');
-            resetButton.type = 'button';
-            resetButton.className = 'button button-secondary gt_reset_button';
-            resetButton.setAttribute('data-topictranslate-reset', '1');
-            resetButton.textContent = config.resetLabel;
-            wrapper.appendChild(resetButton);
-        }
-
         if (!wrapper.querySelector('.gt_credit_inline')) {
             var credit = document.createElement('div');
             credit.className = 'gt_credit_inline';
