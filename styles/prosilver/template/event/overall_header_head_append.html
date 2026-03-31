@@ -1,0 +1,23 @@
+{% if S_TOPICTRANSLATESINGLE_ACTIVE %}
+{% INCLUDECSS '@mundophpbb_topictranslatesingle/topictranslate.css' %}
+<meta name="google" content="notranslate">
+<script>
+window.topicTranslateConfig = {
+    defaultLanguage: {{ GTRANSLATE_DEFAULT_LANGUAGE|json_encode|raw }},
+    nativeLanguageNames: {{ GTRANSLATE_NATIVE_NAMES ? 'true' : 'false' }},
+    detectBrowserLanguage: {{ GTRANSLATE_DETECT_BROWSER ? 'true' : 'false' }},
+    compatibilityMode: {{ GTRANSLATE_COMPATIBILITY_MODE ? 'true' : 'false' }},
+    languages: {{ GTRANSLATE_LANGUAGES_JSON|raw|default('["en"]') }},
+    translateLabel: {{ lang('TRANSLATE')|json_encode|raw }},
+    loadingLabel: {{ lang('TOPIC_TRANSLATE_LOADING')|json_encode|raw }},
+    blockedLabel: {{ lang('TOPIC_TRANSLATE_WIDGET_BLOCKED')|json_encode|raw }},
+    resetLabel: {{ lang('TOPIC_TRANSLATE_RESET')|json_encode|raw }},
+    unavailableLabel: {{ lang('TOPIC_TRANSLATE_SERVICE_UNAVAILABLE')|json_encode|raw }},
+    resetDoneLabel: {{ lang('TOPIC_TRANSLATE_RESET_DONE')|json_encode|raw }},
+    poweredLabel: {{ lang('TOPIC_TRANSLATE_POWERED')|json_encode|raw }},
+    useLastLanguageLabel: {{ lang('TOPIC_TRANSLATE_USE_LAST')|json_encode|raw }}
+};
+</script>
+<script id="topictranslate-external-script"{% if not GTRANSLATE_COMPATIBILITY_MODE %} src="https://cdn.gtranslate.net/widgets/latest/dwf.js"{% endif %} data-src="https://cdn.gtranslate.net/widgets/latest/dwf.js" defer></script>
+{% INCLUDEJS '@mundophpbb_topictranslatesingle/topictranslate.js' %}
+{% endif %}
