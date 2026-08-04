@@ -1,70 +1,214 @@
 {% INCLUDE 'overall_header.html' %}
 <!-- INCLUDECSS @mundophpbb_topictranslatesingle/acp_topictranslatesingle.css -->
+<!-- INCLUDEJS @mundophpbb_topictranslatesingle/acp_topictranslatesingle.js -->
+
 <div id="acp_topictranslatesingle">
     <h1>{{ lang('ACP_TOPICTRANSLATESINGLE_TITLE') }}</h1>
+    <p class="tts-intro">{{ lang('ACP_TTS_INTRO') }}</p>
 
-    <form id="acp_board" method="post" action="{{ U_ACTION }}">
+    <form id="acp_topictranslatesingle_form" method="post" action="{{ U_ACTION }}">
         <fieldset>
-            <dl>
-                <dt><label for="native_names">{{ lang('ACP_TTS_NATIVE_NAMES') }}</label><span>{{ lang('ACP_TTS_NATIVE_NAMES_EXPLAIN') }}</span></dt>
-                <dd>
-                    <label><input type="radio" class="radio" name="native_names" value="1" {% if NATIVE_NAMES %}checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-                    <label><input type="radio" class="radio" name="native_names" value="0" {% if not NATIVE_NAMES %}checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-                </dd>
-            </dl>
+            <legend>{{ lang('ACP_TTS_LANGUAGE_SECTION') }}</legend>
 
             <dl>
-                <dt><label for="detect_browser">{{ lang('ACP_TTS_DETECT_BROWSER') }}</label><span>{{ lang('ACP_TTS_DETECT_BROWSER_EXPLAIN') }}</span></dt>
-                <dd>
-                    <label><input type="radio" class="radio" name="detect_browser" value="1" {% if DETECT_BROWSER %}checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-                    <label><input type="radio" class="radio" name="detect_browser" value="0" {% if not DETECT_BROWSER %}checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-                </dd>
-            </dl>
-
-            <dl>
-                <dt><label for="enabled_forums">{{ lang('ACP_TOPICTRANSLATESINGLE_ENABLED_FORUMS') }}</label><span>{{ lang('ACP_TOPICTRANSLATESINGLE_ENABLED_FORUMS_EXPLAIN') }}</span></dt>
-                <dd>
-                    <input type="text" id="enabled_forums" name="enabled_forums" value="{{ ENABLED_FORUMS }}" class="inputbox" />
-                </dd>
-            </dl>
-
-            <dl>
-                <dt><label for="compatibility_mode">{{ lang('ACP_TTS_COMPATIBILITY_MODE') }}</label><span>{{ lang('ACP_TTS_COMPATIBILITY_MODE_EXPLAIN') }}</span></dt>
-                <dd>
-                    <label><input type="radio" class="radio" name="compatibility_mode" value="1" {% if COMPATIBILITY_MODE %}checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-                    <label><input type="radio" class="radio" name="compatibility_mode" value="0" {% if not COMPATIBILITY_MODE %}checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-                </dd>
-            </dl>
-
-            <dl>
-                <dt><label for="default_language">{{ lang('ACP_TOPICTRANSLATESINGLE_DEFAULT_LANGUAGE') }}</label><span>{{ lang('ACP_TOPICTRANSLATESINGLE_DEFAULT_LANGUAGE_EXPLAIN') }}</span></dt>
+                <dt>
+                    <label for="default_language">{{ lang('ACP_TOPICTRANSLATESINGLE_DEFAULT_LANGUAGE') }}</label>
+                    <span>{{ lang('ACP_TOPICTRANSLATESINGLE_DEFAULT_LANGUAGE_EXPLAIN') }}</span>
+                </dt>
                 <dd>
                     <select name="default_language" id="default_language">
-                        {% for lang in languages %}
-                            <option value="{{ lang.CODE }}" {% if lang.CODE == DEFAULT_LANGUAGE %}selected="selected"{% endif %}>{{ lang.NAME }}</option>
+                        {% for item in source_languages %}
+                            <option value="{{ item.CODE }}"{% if item.SELECTED %} selected="selected"{% endif %}>{{ item.NAME }}</option>
                         {% endfor %}
                     </select>
+                </dd>
+            </dl>
+
+            <details class="tts-multiselect tts-field-group" data-tts-multiselect>
+                <summary>
+                    <span>{{ lang('ACP_TOPICTRANSLATESINGLE_LANGUAGES') }}</span>
+                    <span class="tts-selection-count" aria-live="polite"><strong data-tts-selection-count="languages">{{ LANGUAGE_COUNT }}</strong></span>
+                </summary>
+
+                <div class="tts-multiselect-panel">
+                    <p class="tts-panel-explain">{{ lang('ACP_TOPICTRANSLATESINGLE_LANGUAGES_EXPLAIN') }}</p>
+                    <label class="tts-visually-hidden" for="tts-language-search">{{ lang('ACP_TTS_SEARCH_LANGUAGE') }}</label>
+                    <input type="search" id="tts-language-search" class="inputbox" data-tts-search-input="languages" placeholder="{{ lang('ACP_TTS_SEARCH_LANGUAGE') }}" autocomplete="off">
+
+                    <div class="tts-toolbar" role="group" aria-label="{{ lang('ACP_TTS_LANGUAGE_ACTIONS') }}">
+                        <button type="button" class="button2" data-tts-languages="popular">{{ lang('ACP_TTS_SELECT_POPULAR') }}</button>
+                        <button type="button" class="button2" data-tts-languages="all">{{ lang('ACP_TTS_SELECT_ALL') }}</button>
+                        <button type="button" class="button2" data-tts-languages="none">{{ lang('ACP_TTS_SELECT_NONE') }}</button>
+                    </div>
+
+                    <h3>{{ lang('ACP_TTS_POPULAR_LANGUAGES') }}</h3>
+                    <div class="tts-check-grid" data-tts-language-list="popular">
+                        {% for item in popular_languages %}
+                            <label data-tts-search-item="languages" data-tts-label="{{ item.NAME|lower|e('html_attr') }}">
+                                <input type="checkbox" name="languages[]" value="{{ item.CODE }}" data-tts-count-group="languages"{% if item.SELECTED %} checked="checked"{% endif %}>
+                                <span>{{ item.NAME }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+
+                    <h3>{{ lang('ACP_TTS_OTHER_LANGUAGES') }}</h3>
+                    <div class="tts-check-grid" data-tts-language-list="other">
+                        {% for item in other_languages %}
+                            <label data-tts-search-item="languages" data-tts-label="{{ item.NAME|lower|e('html_attr') }}">
+                                <input type="checkbox" name="languages[]" value="{{ item.CODE }}" data-tts-count-group="languages"{% if item.SELECTED %} checked="checked"{% endif %}>
+                                <span>{{ item.NAME }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </details>
+
+            <dl>
+                <dt>
+                    <label>{{ lang('ACP_TTS_NATIVE_NAMES') }}</label>
+                    <span>{{ lang('ACP_TTS_NATIVE_NAMES_EXPLAIN') }}</span>
+                </dt>
+                <dd>
+                    <label for="native_names_yes"><input type="radio" class="radio" id="native_names_yes" name="native_names" value="1"{% if NATIVE_NAMES %} checked="checked"{% endif %}> {{ lang('YES') }}</label>
+                    <label for="native_names_no"><input type="radio" class="radio" id="native_names_no" name="native_names" value="0"{% if not NATIVE_NAMES %} checked="checked"{% endif %}> {{ lang('NO') }}</label>
                 </dd>
             </dl>
 
             <dl>
-                <dt><label for="languages">{{ lang('ACP_TOPICTRANSLATESINGLE_LANGUAGES') }}</label><span>{{ lang('ACP_TOPICTRANSLATESINGLE_LANGUAGES_EXPLAIN') }}</span><span>{{ lang('ACP_TOPICTRANSLATESINGLE_LANGUAGES_TIP') }}</span></dt>
+                <dt>
+                    <label>{{ lang('ACP_TTS_DETECT_BROWSER') }}</label>
+                    <span>{{ lang('ACP_TTS_DETECT_BROWSER_EXPLAIN') }}</span>
+                </dt>
                 <dd>
-                    <select name="languages[]" id="languages" multiple="multiple" size="10">
-                        {% for lang in languages %}
-                            <option value="{{ lang.CODE }}" {% if lang.SELECTED %}selected="selected"{% endif %}>{{ lang.NAME }}</option>
-                        {% endfor %}
+                    <label for="detect_browser_yes"><input type="radio" class="radio" id="detect_browser_yes" name="detect_browser" value="1"{% if DETECT_BROWSER %} checked="checked"{% endif %}> {{ lang('YES') }}</label>
+                    <label for="detect_browser_no"><input type="radio" class="radio" id="detect_browser_no" name="detect_browser" value="0"{% if not DETECT_BROWSER %} checked="checked"{% endif %}> {{ lang('NO') }}</label>
+                </dd>
+            </dl>
+        </fieldset>
+
+        <fieldset>
+            <legend>{{ lang('ACP_TTS_APPEARANCE_SECTION') }}</legend>
+
+            <dl>
+                <dt>
+                    <label for="color_scheme">{{ lang('ACP_TTS_COLOR_SCHEME') }}</label>
+                    <span>{{ lang('ACP_TTS_COLOR_SCHEME_EXPLAIN') }}</span>
+                </dt>
+                <dd>
+                    <select name="color_scheme" id="color_scheme">
+                        <option value="auto"{% if COLOR_SCHEME == 'auto' %} selected="selected"{% endif %}>{{ lang('ACP_TTS_COLOR_SCHEME_AUTO') }}</option>
+                        <option value="light"{% if COLOR_SCHEME == 'light' %} selected="selected"{% endif %}>{{ lang('ACP_TTS_COLOR_SCHEME_LIGHT') }}</option>
+                        <option value="dark"{% if COLOR_SCHEME == 'dark' %} selected="selected"{% endif %}>{{ lang('ACP_TTS_COLOR_SCHEME_DARK') }}</option>
+                    </select>
+                </dd>
+            </dl>
+        </fieldset>
+
+        <fieldset>
+            <legend>{{ lang('ACP_TTS_FORUM_SECTION') }}</legend>
+
+            <dl>
+                <dt>
+                    <label for="forum_mode">{{ lang('ACP_TTS_FORUM_MODE') }}</label>
+                    <span>{{ lang('ACP_TTS_FORUM_MODE_EXPLAIN') }}</span>
+                </dt>
+                <dd>
+                    <select name="forum_mode" id="forum_mode">
+                        <option value="include"{% if FORUM_MODE == 'include' %} selected="selected"{% endif %}>{{ lang('ACP_TTS_FORUM_MODE_INCLUDE') }}</option>
+                        <option value="exclude"{% if FORUM_MODE == 'exclude' %} selected="selected"{% endif %}>{{ lang('ACP_TTS_FORUM_MODE_EXCLUDE') }}</option>
                     </select>
                 </dd>
             </dl>
 
-            <p class="submit-buttons">
-                <input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
-                <input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
-            </p>
+            <details class="tts-multiselect tts-field-group" data-tts-multiselect>
+                <summary>
+                    <span>{{ lang('ACP_TOPICTRANSLATESINGLE_ENABLED_FORUMS') }}</span>
+                    <span class="tts-selection-count" aria-live="polite"><strong data-tts-selection-count="forums">{{ FORUM_COUNT }}</strong></span>
+                </summary>
 
-            {{ S_FORM_TOKEN }}
+                <div class="tts-multiselect-panel">
+                    <p class="tts-panel-explain">{{ lang('ACP_TOPICTRANSLATESINGLE_ENABLED_FORUMS_EXPLAIN') }}</p>
+                    <div class="tts-field-heading tts-field-heading--controls">
+                        <label class="tts-visually-hidden" for="tts-forum-availability-search">{{ lang('ACP_TTS_SEARCH_FORUM') }}</label>
+                        <input type="search" id="tts-forum-availability-search" class="inputbox" data-tts-search-input="forums" placeholder="{{ lang('ACP_TTS_SEARCH_FORUM') }}" autocomplete="off">
+                        <div class="tts-toolbar" role="group" aria-label="{{ lang('ACP_TOPICTRANSLATESINGLE_ENABLED_FORUMS') }}">
+                        <button type="button" class="button2" data-tts-forums="all">{{ lang('ACP_TTS_SELECT_ALL') }}</button>
+                        <button type="button" class="button2" data-tts-forums="none">{{ lang('ACP_TTS_SELECT_NONE') }}</button>
+                        </div>
+                    </div>
+                    <div class="tts-forum-list">
+                        {% for forum in forums %}
+                            <label data-tts-search-item="forums" data-tts-label="{{ forum.NAME|lower|e('html_attr') }}"{% if forum.DISABLED %} class="tts-forum-disabled"{% endif %}>
+                                <input type="checkbox" name="enabled_forums[]" value="{{ forum.ID }}" data-tts-count-group="forums"{% if forum.SELECTED %} checked="checked"{% endif %}{% if forum.DISABLED %} disabled="disabled"{% endif %}>
+                                <span>{{ forum.NAME }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </details>
+
+            <details class="tts-multiselect tts-field-group" data-tts-multiselect>
+                <summary>
+                    <span>{{ lang('ACP_TTS_FORUM_LANGUAGES') }}</span>
+                    <span class="tts-selection-count" aria-live="polite"><strong data-tts-selection-count="forum-languages">{{ FORUM_LANGUAGE_COUNT }}</strong></span>
+                </summary>
+
+                <div class="tts-multiselect-panel">
+                    <p class="tts-panel-explain">{{ lang('ACP_TTS_FORUM_LANGUAGES_EXPLAIN') }}</p>
+                    <label class="tts-visually-hidden" for="tts-forum-language-search">{{ lang('ACP_TTS_SEARCH_FORUM') }}</label>
+                    <input type="search" id="tts-forum-language-search" class="inputbox" data-tts-search-input="forum-languages" placeholder="{{ lang('ACP_TTS_SEARCH_FORUM') }}" autocomplete="off">
+
+                    <div class="tts-forum-language-list">
+                        {% for forum in forums %}
+                            <div class="tts-forum-language-row{% if forum.DISABLED %} tts-forum-disabled{% endif %}" data-tts-search-item="forum-languages" data-tts-label="{{ forum.NAME|lower|e('html_attr') }}">
+                                <label for="forum-language-{{ forum.ID }}">{{ forum.NAME }}</label>
+                                <select name="forum_languages[{{ forum.ID }}]" id="forum-language-{{ forum.ID }}" data-tts-count-group="forum-languages"{% if forum.DISABLED %} disabled="disabled"{% endif %}>
+                                    <option value="">{{ forum.GLOBAL_LANGUAGE_LABEL }}</option>
+                                    {% for source in forum.source_languages %}
+                                        <option value="{{ source.CODE }}"{% if source.SELECTED %} selected="selected"{% endif %}>{{ source.NAME }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </details>
         </fieldset>
+
+        <fieldset>
+            <legend>{{ lang('ACP_TTS_PRIVACY_SECTION') }}</legend>
+
+            <dl>
+                <dt>
+                    <label>{{ lang('ACP_TTS_LAZY_LOAD') }}</label>
+                    <span>{{ lang('ACP_TTS_LAZY_LOAD_EXPLAIN') }}</span>
+                </dt>
+                <dd>
+                    <label for="lazy_load_yes"><input type="radio" class="radio" id="lazy_load_yes" name="lazy_load" value="1"{% if LAZY_LOAD %} checked="checked"{% endif %}> {{ lang('YES') }}</label>
+                    <label for="lazy_load_no"><input type="radio" class="radio" id="lazy_load_no" name="lazy_load" value="0"{% if not LAZY_LOAD %} checked="checked"{% endif %}> {{ lang('NO') }}</label>
+                </dd>
+            </dl>
+
+            <dl>
+                <dt>
+                    <label>{{ lang('ACP_TTS_REMEMBER_LANGUAGE') }}</label>
+                    <span>{{ lang('ACP_TTS_REMEMBER_LANGUAGE_EXPLAIN') }}</span>
+                </dt>
+                <dd>
+                    <label for="remember_language_yes"><input type="radio" class="radio" id="remember_language_yes" name="remember_language" value="1"{% if REMEMBER_LANGUAGE %} checked="checked"{% endif %}> {{ lang('YES') }}</label>
+                    <label for="remember_language_no"><input type="radio" class="radio" id="remember_language_no" name="remember_language" value="0"{% if not REMEMBER_LANGUAGE %} checked="checked"{% endif %}> {{ lang('NO') }}</label>
+                </dd>
+            </dl>
+
+            <div class="tts-notice">{{ lang('ACP_TTS_EXTERNAL_SERVICE_NOTICE') }}</div>
+        </fieldset>
+
+        <p class="submit-buttons">
+            <input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}">
+            <input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}">
+        </p>
+
+        {{ S_FORM_TOKEN }}
     </form>
 </div>
 

@@ -12,74 +12,62 @@ class main_listener implements EventSubscriberInterface
     /** @var \phpbb\template\template */
     protected $template;
 
-    /** @var \phpbb\request\request_interface */
-    protected $request;
+    /** @var \phpbb\config\db_text */
+    protected $config_text;
 
     public function __construct(
         \phpbb\config\config $config,
         \phpbb\template\template $template,
-        \phpbb\request\request_interface $request
+        \phpbb\config\db_text $config_text
     ) {
         $this->config = $config;
         $this->template = $template;
-        $this->request = $request;
+        $this->config_text = $config_text;
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            'core.page_header_after' => 'add_gtranslate_vars',
-            'core.page_footer' => 'add_gtranslate_vars',
+            'core.viewtopic_assign_template_vars_before' => 'add_gtranslate_vars',
         ];
     }
 
     public function add_gtranslate_vars($event)
     {
-        $is_viewtopic = $this->is_viewtopic_page();
-        $forum_id = (int) $this->request->variable('f', 0);
+        $forum_id = (int) $event['forum_id'];
         $is_enabled_forum = $this->forum_is_enabled($forum_id);
         $supported_languages = supported_languages::get();
         $selected_languages = $this->get_selected_languages($supported_languages);
-        $default_language = $this->get_default_language($selected_languages, $supported_languages);
+        $board_language = $this->get_default_language($supported_languages);
+        $default_language = $this->get_forum_language($forum_id, $supported_languages, $board_language);
+        if ($default_language !== $board_language && !in_array($board_language, $selected_languages, true))
+        {
+            array_unshift($selected_languages, $board_language);
+        }
+        if (!in_array($default_language, $selected_languages, true))
+        {
+            array_unshift($selected_languages, $default_language);
+        }
         $native_names = $this->config->offsetExists('topictranslatesingle_native_names') ? (bool) $this->config['topictranslatesingle_native_names'] : true;
-        $detect_browser = $this->config->offsetExists('topictranslatesingle_detect_browser') ? (bool) $this->config['topictranslatesingle_detect_browser'] : true;
+        $detect_browser = $this->config->offsetExists('topictranslatesingle_detect_browser') ? (bool) $this->config['topictranslatesingle_detect_browser'] : false;
+        $color_scheme = $this->config->offsetExists('topictranslatesingle_color_scheme') ? (string) $this->config['topictranslatesingle_color_scheme'] : 'auto';
+        if (!in_array($color_scheme, ['auto', 'light', 'dark'], true))
+        {
+            $color_scheme = 'auto';
+        }
 
         $this->template->assign_vars([
-            'S_TOPICTRANSLATESINGLE_ACTIVE' => $is_viewtopic && $is_enabled_forum,
+            'S_TOPICTRANSLATESINGLE_ACTIVE' => $is_enabled_forum,
             'GTRANSLATE_DEFAULT_LANGUAGE' => $default_language,
             'GTRANSLATE_LANGUAGES_JSON' => json_encode(array_values($selected_languages)),
             'GTRANSLATE_NATIVE_NAMES' => $native_names,
             'GTRANSLATE_DETECT_BROWSER' => $detect_browser,
-            'GTRANSLATE_COMPATIBILITY_MODE' => $this->config->offsetExists('topictranslatesingle_compatibility_mode') ? (bool) $this->config['topictranslatesingle_compatibility_mode'] : false,
+            'GTRANSLATE_COLOR_SCHEME' => $color_scheme,
+            'GTRANSLATE_LAZY_LOAD' => $this->config->offsetExists('topictranslatesingle_lazy_load') ? (bool) $this->config['topictranslatesingle_lazy_load'] : true,
+            'GTRANSLATE_REMEMBER_LANGUAGE' => $this->config->offsetExists('topictranslatesingle_remember_language') ? (bool) $this->config['topictranslatesingle_remember_language'] : true,
+            'GTRANSLATE_COOKIE_DOMAIN' => $this->config->offsetExists('cookie_domain') ? (string) $this->config['cookie_domain'] : '',
+            'GTRANSLATE_COOKIE_PATH' => $this->config->offsetExists('cookie_path') ? (string) $this->config['cookie_path'] : '/',
         ]);
-    }
-
-    protected function is_viewtopic_page()
-    {
-        $script_name = (string) $this->request->server('SCRIPT_NAME');
-        $php_self = (string) $this->request->server('PHP_SELF');
-        $php_ext = (string) $this->request->server('PHP_EXT', 'php');
-        $topic_id = (int) $this->request->variable('t', 0);
-
-        if ($topic_id > 0)
-        {
-            return true;
-        }
-
-        $candidates = [
-            basename($script_name),
-            basename($php_self),
-        ];
-
-        foreach ($candidates as $candidate)
-        {
-            if ($candidate === 'viewtopic.' . $php_ext || $candidate === 'app.php')
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     protected function get_selected_languages(array $supported_languages)
@@ -108,18 +96,36 @@ class main_listener implements EventSubscriberInterface
         return $selected_languages;
     }
 
-    protected function get_default_language(array $selected_languages, array $supported_languages)
+    protected function get_default_language(array $supported_languages)
     {
         $default_language = $this->config->offsetExists('topictranslatesingle_default_language')
             ? (string) $this->config['topictranslatesingle_default_language']
             : 'en';
 
-        if (!isset($supported_languages[$default_language]) || !in_array($default_language, $selected_languages, true))
+        if (!isset($supported_languages[$default_language]))
         {
-            $default_language = $selected_languages[0];
+            $default_language = 'en';
         }
 
         return $default_language;
+    }
+
+    protected function get_forum_language($forum_id, array $supported_languages, $fallback_language)
+    {
+        if ($forum_id <= 0)
+        {
+            return $fallback_language;
+        }
+
+        $forum_languages = json_decode((string) $this->config_text->get('topictranslatesingle_forum_languages'), true);
+        if (!is_array($forum_languages) || !isset($forum_languages[$forum_id]))
+        {
+            return $fallback_language;
+        }
+
+        $forum_language = (string) $forum_languages[$forum_id];
+
+        return isset($supported_languages[$forum_language]) ? $forum_language : $fallback_language;
     }
 
     protected function forum_is_enabled($forum_id)
@@ -133,10 +139,15 @@ class main_listener implements EventSubscriberInterface
 
         if ($forum_id <= 0)
         {
-            return true;
+            return false;
         }
 
-        return in_array((int) $forum_id, $enabled_forums, true);
+        $is_listed = in_array((int) $forum_id, $enabled_forums, true);
+        $forum_mode = $this->config->offsetExists('topictranslatesingle_forum_mode')
+            ? (string) $this->config['topictranslatesingle_forum_mode']
+            : 'include';
+
+        return $forum_mode === 'exclude' ? !$is_listed : $is_listed;
     }
 
     protected function get_enabled_forums()

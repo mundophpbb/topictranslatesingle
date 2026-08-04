@@ -1,89 +1,101 @@
 # Topic Translate Single
 
-[![phpBB 3.3](https://img.shields.io/badge/phpBB-3.3-brightgreen.svg)](https://www.phpbb.com/)
-[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
-[![GitHub release](https://img.shields.io/github/release/mundophpbb/topictranslatesingle.svg)](https://github.com/mundophpbb/topictranslatesingle/releases)
-[![GitHub stars](https://img.shields.io/github/stars/mundophpbb/topictranslatesingle.svg?style=social)](https://github.com/mundophpbb/topictranslatesingle/stargazers)
+Extensão para phpBB 3.3 que traduz individualmente o conteúdo de um post usando o widget gratuito do GTranslate/Google Translate. A interface do fórum, os demais posts, assinaturas e anexos permanecem no idioma original.
 
-Extensão phpBB que permite **tradução individual de tópicos/posts** usando o widget gratuito do GTranslate (baseado no Google Translate).  
-O usuário clica em um botão discreto no post e escolhe o idioma — a tradução acontece apenas naquele post, sem afetar o resto do fórum.
+## Principais recursos
 
-Ideal para fóruns multilíngues ou com público internacional, sem precisar de tradução manual ou plugins pesados.
-
-## Recursos principais
-
-- Tradução **por post individual** (não traduz o fórum inteiro).
-- Botão simples no postbody com dropdown inline de idiomas.
-- Configuração fácil no ACP:
-  - Idioma padrão.
-  - Seleção de idiomas disponíveis (mais de 100 suportados, com os mais comuns pré-selecionados).
-- Layout limpo e moderno no ACP (fonte Bai Jamjuree, design flat 2026).
-- Correção automática de layout da tradução (evita quebras em BBCode).
-- Crédito obrigatório ao GTranslate (conforme termos free).
-- Compatível com prosilver e estilos derivados.
-
-## Screenshots
-
-![Configurações no ACP](screenshots/acp_settings.png)
-*Painel de configuração no ACP — idiomas populares no topo*
-
-![Botão no post](screenshots/button_post.png)
-*Botão discreto no canto do post*
-
-![Dropdown de idiomas](screenshots/dropdown_open.png)
-*Dropdown inline com bandeiras 3D*
-
-![Tradução em ação](screenshots/translation_example.png)
-*Exemplo de tradução para espanhol*
-
-## Instalação
-
-1. Baixe a última versão em [Releases](https://github.com/mundophpbb/topictranslatesingle/releases).
-2. Descompacte e envie a pasta `mundophpbb/topictranslatesingle` para `/ext/` do seu phpBB.
-3. Vá ao ACP → Personalizar → Gerenciar extensões.
-4. Ative **Topic Translate Single**.
-
-Pronto! A extensão já vem com idiomas comuns pré-configurados.
-
-## Configuração
-
-No ACP → Extensões → Topic Translate Single → Configurações:
-
-- **Idioma Padrão**: Inglês (base do GTranslate).
-- **Idiomas Disponíveis**: Selecione os que quiser no menu (Ctrl+clique). Os mais usados já vêm marcados.
-
-> Dica: A maioria dos fóruns usa menos de 15 idiomas. Idiomas raros estão no final da lista.
+- Tradução individual por post.
+- O post original nunca é substituído ou reescrito no DOM.
+- Um único seletor de idiomas compartilhado por toda a página.
+- Carregamento do serviço externo somente após o clique, por padrão.
+- Botões para restaurar o conteúdo original e repetir o último idioma.
+- Idioma de origem separado dos idiomas de destino.
+- Seleção de fóruns pelo nome, nos modos inclusão ou exclusão.
+- Idioma original global com substituição opcional por fórum ou subfórum.
+- Pesquisa e seleção rápida de idiomas no ACP.
+- Menus recolhíveis de múltipla escolha para manter o ACP compacto.
+- Opção para lembrar o último idioma no navegador.
+- Blocos técnicos, como `code`, `pre` e `.codebox`, marcados para não serem traduzidos.
+- Interface responsiva, compatível com teclado, leitores de tela e páginas RTL.
+- Paletas automática, clara e escura configuráveis no ACP.
+- Proteção contra conflito com outro widget GTranslate na mesma página.
+- Traduções em inglês, francês e português do Brasil.
 
 ## Requisitos
 
-- phpBB 3.3.x ou superior
-- Estilo baseado em prosilver (testado em prosilver e derivados)
-- Conexão à internet (para o widget GTranslate)
+- phpBB 3.3.0 ou superior.
+- PHP 7.4 ou superior.
+- Estilo prosilver ou derivado.
+- Acesso do navegador aos serviços externos do GTranslate e Google Translate.
 
-## Limitações (versão free do GTranslate)
+## Instalação
 
-- Quota diária/mensal gratuita (pode falhar em fóruns muito grandes).
-- Para uso intenso, considere a versão paid do GTranslate.
+O ZIP de distribuição contém a estrutura:
+
+```text
+mundophpbb/topictranslatesingle/
+```
+
+1. Extraia o ZIP.
+2. Envie `mundophpbb/topictranslatesingle` para a pasta `ext/` do phpBB.
+3. No ACP, acesse **Personalizar → Gerenciar extensões**.
+4. Ative **Topic Translate Single**.
+5. Configure a extensão em **Extensões → Tradução de Tópicos**.
+
+Ao atualizar uma instalação existente, desative a extensão sem excluir os dados, substitua os arquivos, reative-a e limpe o cache do phpBB.
+
+## Configuração
+
+### Idiomas
+
+- **Idioma original do fórum:** idioma de origem predominante dos posts.
+- **Idiomas de destino:** idiomas oferecidos aos visitantes.
+- **Nomes nativos:** apresenta os idiomas na escrita correspondente quando suportado.
+- **Detectar idioma do navegador:** traduz automaticamente o post aberto para o idioma detectado pelo widget; fica desativado por padrão.
+
+### Fóruns
+
+- **Ativar somente nos selecionados:** a tradução aparece apenas nos fóruns marcados.
+- **Ativar em todos, exceto nos selecionados:** os fóruns marcados ficam bloqueados.
+- Sem fóruns selecionados, o recurso permanece disponível em todos os tópicos.
+- **Idioma original por fórum:** use somente nas seções cujo idioma predominante seja diferente do idioma global.
+- Quando houver uma substituição, o idioma global será incluído automaticamente como destino. Exemplo: fórum global em português e seção em inglês permitem traduzir essa seção para português.
+
+### Aparência
+
+- **Automática:** analisa a cor de fundo do estilo e, quando necessário, usa a preferência clara ou escura do navegador.
+- **Clara ou escura:** força a paleta escolhida em todos os estilos.
+
+### Privacidade e desempenho
+
+- **Carregar somente após o clique:** recomendado e ativado por padrão.
+- **Lembrar último idioma:** utiliza `localStorage` no navegador do visitante.
+
+GTranslate e Google Translate são serviços externos. Ao usar a tradução, conteúdo visível e dados técnicos da requisição podem ser processados por terceiros. Avalie sua política de privacidade antes de habilitar o recurso em fóruns privados.
+
+## Funcionamento e limitações
+
+- Somente um post permanece traduzido por vez. Ao traduzir outro post, o anterior volta ao conteúdo original.
+- A tradução é automática e pode conter erros.
+- A versão gratuita funciona no navegador, usa cookies ou sessão e não cria URLs traduzidas indexáveis.
+- As traduções da versão gratuita não são armazenadas e não oferecem benefício de SEO.
+- Bloqueadores de conteúdo, políticas CSP ou filtros de rede podem impedir o carregamento do widget.
+- Quando outro GTranslate já está presente, a tradução individual é desativada com um aviso para evitar disputa por `window.gtranslateSettings`.
+- A integração usa o script remoto `widgets/latest/dwf.js`; mudanças futuras do fornecedor podem exigir atualização da extensão.
+
+## Compatibilidade com CSP
+
+O código próprio da extensão não depende de JavaScript inline. Entretanto, a política CSP do fórum precisa permitir os domínios utilizados pelo widget externo. Consulte a documentação atual do GTranslate antes de alterar sua política.
+
+## Atualização para 1.6.3
+
+Ao atualizar da série 1.5.x, as migrações criam automaticamente as opções de carregamento sob demanda, memorização do idioma, modo da lista de fóruns, paleta e idiomas específicos por fórum. A antiga opção “Modo de compatibilidade” deixa de ser utilizada e é substituída pela opção mais clara “Carregar somente após o clique”. A atualização para 1.6.3 preserva as configurações existentes; todos os fóruns começam usando o idioma global até que uma substituição seja escolhida.
 
 ## Licença
 
-GPL-2.0 — livre para usar, modificar e distribuir.
+GPL-2.0-or-later.
 
-## Suporte e Feedback
+## Suporte
 
-- Tópico de discussão: [Link pro seu fórum ou phpBB.com quando criar]
-- Issues aqui no GitHub: [Reportar bug ou sugestão](https://github.com/mundophpbb/topictranslatesingle/issues)
-
-Feito com ❤️ por Chico Gois (@ChicoGois2)
-
----
-
-### English Description
-
-**Topic Translate Single** is a phpBB extension that allows **per-post/topic translation** using the free GTranslate widget (powered by Google Translate).  
-Users click a discreet button on the post to select a language — translation applies only to that post.
-
-Perfect for multilingual or international forums without manual translations.
-
-- Download: [Latest release](https://github.com/mundophpbb/topictranslatesingle/releases)
-- Support: Open an issue or contact @ChicoGois2
+- Projeto: https://github.com/mundophpbb/topictranslatesingle
+- Autor: Chico Gois / Mundo phpBB

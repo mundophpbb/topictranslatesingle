@@ -22,7 +22,7 @@ class v100 extends \phpbb\db\migration\migration
             
             // Novas opções para o ACP
             ['config.add', ['topictranslatesingle_native_names', 1]],
-            ['config.add', ['topictranslatesingle_detect_browser', 1]],
+            ['config.add', ['topictranslatesingle_detect_browser', 0]],
 
             // Categoria principal no ACP (Customise -> Extensões)
             ['module.add', [

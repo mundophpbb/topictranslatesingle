@@ -1,5 +1,46 @@
 {% if S_TOPICTRANSLATESINGLE_ACTIVE %}
-<script>
-    document.documentElement.classList.add('notranslate');
-</script>
+<div id="topictranslate-app"
+    class="topictranslate-popover notranslate"
+    hidden
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="topictranslate-title"
+    translate="no"
+    data-default-language="{{ GTRANSLATE_DEFAULT_LANGUAGE|e('html_attr') }}"
+    data-languages="{{ GTRANSLATE_LANGUAGES_JSON|e('html_attr') }}"
+    data-native-language-names="{{ GTRANSLATE_NATIVE_NAMES ? '1' : '0' }}"
+    data-detect-browser-language="{{ GTRANSLATE_DETECT_BROWSER ? '1' : '0' }}"
+    data-color-scheme="{{ GTRANSLATE_COLOR_SCHEME|e('html_attr') }}"
+    data-lazy-load="{{ GTRANSLATE_LAZY_LOAD ? '1' : '0' }}"
+    data-remember-language="{{ GTRANSLATE_REMEMBER_LANGUAGE ? '1' : '0' }}"
+    data-cookie-domain="{{ GTRANSLATE_COOKIE_DOMAIN|e('html_attr') }}"
+    data-cookie-path="{{ GTRANSLATE_COOKIE_PATH|e('html_attr') }}"
+    data-script-src="https://cdn.gtranslate.net/widgets/latest/dwf.js"
+    data-loading-label="{{ lang('TOPIC_TRANSLATE_LOADING')|e('html_attr') }}"
+    data-blocked-label="{{ lang('TOPIC_TRANSLATE_WIDGET_BLOCKED')|e('html_attr') }}"
+    data-conflict-label="{{ lang('TOPIC_TRANSLATE_WIDGET_CONFLICT')|e('html_attr') }}"
+    data-unavailable-label="{{ lang('TOPIC_TRANSLATE_SERVICE_UNAVAILABLE')|e('html_attr') }}"
+    data-reset-done-label="{{ lang('TOPIC_TRANSLATE_RESET_DONE')|e('html_attr') }}"
+    data-use-last-label="{{ lang('TOPIC_TRANSLATE_USE_LAST')|e('html_attr') }}">
+    <div class="topictranslate-popover__header">
+        <strong id="topictranslate-title">{{ lang('TRANSLATE') }}</strong>
+        <button type="button" class="topictranslate-close" data-topictranslate-close="1" aria-label="{{ lang('TOPIC_TRANSLATE_CLOSE') }}" title="{{ lang('TOPIC_TRANSLATE_CLOSE') }}">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="gtranslate_wrapper" aria-label="{{ lang('TOPIC_TRANSLATE_LANGUAGE_SELECTOR') }}"></div>
+
+    <p class="topictranslate-status" data-topictranslate-status="1" role="status" aria-live="polite" hidden></p>
+
+    <div class="topictranslate-actions">
+        <button type="button" class="button button-secondary" data-topictranslate-repeat-last="1" hidden></button>
+        <button type="button" class="button button-secondary" data-topictranslate-reset="1" hidden>{{ lang('TOPIC_TRANSLATE_RESET') }}</button>
+    </div>
+
+    <p class="topictranslate-credit">
+        <a href="https://gtranslate.io" target="_blank" rel="nofollow noopener">{{ lang('TOPIC_TRANSLATE_POWERED') }} GTranslate / Google Translate</a>
+    </p>
+</div>
 {% endif %}
