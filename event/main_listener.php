@@ -37,6 +37,7 @@ class main_listener implements EventSubscriberInterface
         $forum_id = (int) $event['forum_id'];
         $is_enabled_forum = $this->forum_is_enabled($forum_id);
         $supported_languages = supported_languages::get();
+        $language_flags = supported_languages::get_flags();
         $selected_languages = $this->get_selected_languages($supported_languages);
         $board_language = $this->get_default_language($supported_languages);
         $default_language = $this->get_forum_language($forum_id, $supported_languages, $board_language);
@@ -47,6 +48,20 @@ class main_listener implements EventSubscriberInterface
         if (!in_array($default_language, $selected_languages, true))
         {
             array_unshift($selected_languages, $default_language);
+        }
+        $language_options = [];
+        foreach ($selected_languages as $language_code)
+        {
+            if ($language_code === $default_language)
+            {
+                continue;
+            }
+
+            $language_options[] = [
+                'CODE' => $language_code,
+                'NAME' => $supported_languages[$language_code],
+                'FLAG' => isset($language_flags[$language_code]) ? $language_flags[$language_code] : 'un',
+            ];
         }
         $native_names = $this->config->offsetExists('topictranslatesingle_native_names') ? (bool) $this->config['topictranslatesingle_native_names'] : true;
         $detect_browser = $this->config->offsetExists('topictranslatesingle_detect_browser') ? (bool) $this->config['topictranslatesingle_detect_browser'] : false;
@@ -59,7 +74,10 @@ class main_listener implements EventSubscriberInterface
         $this->template->assign_vars([
             'S_TOPICTRANSLATESINGLE_ACTIVE' => $is_enabled_forum,
             'GTRANSLATE_DEFAULT_LANGUAGE' => $default_language,
+            'GTRANSLATE_DEFAULT_LANGUAGE_NAME' => $supported_languages[$default_language],
+            'GTRANSLATE_DEFAULT_LANGUAGE_FLAG' => isset($language_flags[$default_language]) ? $language_flags[$default_language] : 'un',
             'GTRANSLATE_LANGUAGES_JSON' => json_encode(array_values($selected_languages)),
+            'GTRANSLATE_LANGUAGE_OPTIONS' => $language_options,
             'GTRANSLATE_NATIVE_NAMES' => $native_names,
             'GTRANSLATE_DETECT_BROWSER' => $detect_browser,
             'GTRANSLATE_COLOR_SCHEME' => $color_scheme,

@@ -55,4 +55,25 @@ class supported_languages
     {
         return self::get_all();
     }
+
+    public static function get_flags()
+    {
+        return [
+            'af' => 'za', 'sq' => 'al', 'am' => 'et', 'ar' => 'sa', 'hy' => 'am', 'az' => 'az', 'eu' => 'es',
+            'be' => 'by', 'bn' => 'bd', 'bs' => 'ba', 'bg' => 'bg', 'ca' => 'es', 'ceb' => 'ph', 'ny' => 'mw',
+            'zh-CN' => 'cn', 'zh-TW' => 'tw', 'co' => 'fr', 'hr' => 'hr', 'cs' => 'cz', 'da' => 'dk',
+            'nl' => 'nl', 'en' => 'gb', 'eo' => 'un', 'et' => 'ee', 'tl' => 'ph', 'fi' => 'fi', 'fr' => 'fr',
+            'fy' => 'nl', 'gl' => 'es', 'ka' => 'ge', 'de' => 'de', 'el' => 'gr', 'gu' => 'in', 'ht' => 'ht',
+            'ha' => 'ng', 'haw' => 'us', 'iw' => 'il', 'hi' => 'in', 'hmn' => 'cn', 'hu' => 'hu', 'is' => 'is',
+            'ig' => 'ng', 'id' => 'id', 'ga' => 'ie', 'it' => 'it', 'ja' => 'jp', 'jw' => 'id', 'kn' => 'in',
+            'kk' => 'kz', 'km' => 'kh', 'ko' => 'kr', 'ku' => 'iq', 'ky' => 'kg', 'lo' => 'la', 'la' => 'va',
+            'lv' => 'lv', 'lt' => 'lt', 'lb' => 'lu', 'mk' => 'mk', 'mg' => 'mg', 'ms' => 'my', 'ml' => 'in',
+            'mt' => 'mt', 'mi' => 'nz', 'mr' => 'in', 'mn' => 'mn', 'my' => 'mm', 'ne' => 'np', 'no' => 'no',
+            'ps' => 'af', 'fa' => 'ir', 'pl' => 'pl', 'pt' => 'pt', 'pa' => 'in', 'ro' => 'ro', 'ru' => 'ru',
+            'sm' => 'ws', 'gd' => 'gb', 'sr' => 'rs', 'st' => 'ls', 'sn' => 'zw', 'sd' => 'pk', 'si' => 'lk',
+            'sk' => 'sk', 'sl' => 'si', 'so' => 'so', 'es' => 'es', 'su' => 'id', 'sw' => 'tz', 'sv' => 'se',
+            'tg' => 'tj', 'ta' => 'in', 'te' => 'in', 'th' => 'th', 'tr' => 'tr', 'uk' => 'ua', 'ur' => 'pk',
+            'uz' => 'uz', 'vi' => 'vn', 'cy' => 'gb', 'xh' => 'za', 'yi' => 'il', 'yo' => 'ng', 'zu' => 'za',
+        ];
+    }
 }
