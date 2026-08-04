@@ -57,10 +57,10 @@ $lang = array_merge($lang, [
 
     'ACP_TTS_PRIVACY_SECTION' => 'Performances et confidentialité',
     'ACP_TTS_LAZY_LOAD' => 'Charger uniquement après un clic',
-    'ACP_TTS_LAZY_LOAD_EXPLAIN' => 'Recommandé. Le script externe GTranslate n’est demandé qu’après l’ouverture du traducteur.',
+    'ACP_TTS_LAZY_LOAD_EXPLAIN' => 'Recommandé. Le moteur de traduction externe n’est demandé qu’après l’ouverture du traducteur.',
     'ACP_TTS_REMEMBER_LANGUAGE' => 'Mémoriser la dernière langue',
     'ACP_TTS_REMEMBER_LANGUAGE_EXPLAIN' => 'Enregistre la dernière langue choisie dans le stockage local du navigateur du visiteur.',
-    'ACP_TTS_EXTERNAL_SERVICE_NOTICE' => 'GTranslate et Google Translate sont des services externes. Lors de l’utilisation du traducteur, le contenu de la page et des données techniques peuvent être traités par des tiers. Vérifiez votre politique de confidentialité avant d’activer cette fonction dans des forums privés.',
+    'ACP_TTS_EXTERNAL_SERVICE_NOTICE' => 'L’intégration est basée sur le widget GTranslate et utilise des ressources externes de Google Translate. Lors de l’utilisation du traducteur, le contenu de la page et des données techniques peuvent être traités par des tiers. Vérifiez votre politique de confidentialité avant d’activer cette fonction dans des forums privés.',
 
     'ACP_TOPICTRANSLATESINGLE_SETTING_SAVED' => 'Paramètres enregistrés avec succès !',
 ]);

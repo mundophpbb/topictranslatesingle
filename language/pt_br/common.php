@@ -20,10 +20,11 @@ $lang = array_merge($lang, [
     'TOPIC_TRANSLATE_USE_LAST' => 'Usar último idioma',
     'TOPIC_TRANSLATE_CLOSE'     => 'Fechar tradutor',
     'TOPIC_TRANSLATE_LANGUAGE_SELECTOR' => 'Idioma da tradução',
+    'TOPIC_TRANSLATE_ORIGINAL_LANGUAGE' => 'Idioma original',
     'TRANSLATE'                => 'Traduzir',
     'TOPIC_TRANSLATE_SERVICE_UNAVAILABLE' => 'O serviço de tradução está indisponível no momento. Tente novamente em instantes.',
     'TOPIC_TRANSLATE_RESET_DONE' => 'Conteúdo original restaurado.',
     'TOPIC_TRANSLATE_LOADING' => 'Carregando tradutor…',
-    'TOPIC_TRANSLATE_WIDGET_BLOCKED' => 'O widget de tradução não carregou. Verifique bloqueios do navegador, CSP ou filtros de rede e tente novamente.',
+    'TOPIC_TRANSLATE_WIDGET_BLOCKED' => 'O serviço de tradução foi bloqueado. Verifique as proteções do navegador, a CSP ou os filtros de rede e tente novamente.',
     'TOPIC_TRANSLATE_WIDGET_CONFLICT' => 'Outro widget do GTranslate já está ativo nesta página. A tradução individual foi desativada para evitar conflito de configuração.',
 ]);

@@ -1,12 +1,13 @@
 # Topic Translate Single
 
-Extensão para phpBB 3.3 que traduz individualmente o conteúdo de um post usando o widget gratuito do GTranslate/Google Translate. A interface do fórum, os demais posts, assinaturas e anexos permanecem no idioma original.
+Extensão para phpBB 3.3 que traduz individualmente o conteúdo de um post com uma integração baseada no widget gratuito do GTranslate e no mecanismo do Google Translate. A interface do fórum, os demais posts, assinaturas e anexos permanecem no idioma original.
 
 ## Principais recursos
 
 - Tradução individual por post.
 - O post original nunca é substituído ou reescrito no DOM.
 - Um único seletor de idiomas compartilhado por toda a página.
+- Bandeiras locais ao lado dos idiomas no botão e no menu suspenso, sem dependência de CDN.
 - Carregamento do serviço externo somente após o clique, por padrão.
 - Botões para restaurar o conteúdo original e repetir o último idioma.
 - Idioma de origem separado dos idiomas de destino.
@@ -26,7 +27,7 @@ Extensão para phpBB 3.3 que traduz individualmente o conteúdo de um post usand
 - phpBB 3.3.0 ou superior.
 - PHP 7.4 ou superior.
 - Estilo prosilver ou derivado.
-- Acesso do navegador aos serviços externos do GTranslate e Google Translate.
+- Acesso do navegador aos serviços externos do Google Translate.
 
 ## Instalação
 
@@ -71,7 +72,7 @@ Ao atualizar uma instalação existente, desative a extensão sem excluir os dad
 - **Carregar somente após o clique:** recomendado e ativado por padrão.
 - **Lembrar último idioma:** utiliza `localStorage` no navegador do visitante.
 
-GTranslate e Google Translate são serviços externos. Ao usar a tradução, conteúdo visível e dados técnicos da requisição podem ser processados por terceiros. Avalie sua política de privacidade antes de habilitar o recurso em fóruns privados.
+A integração é baseada no widget do GTranslate e utiliza recursos externos do Google Translate. Ao usar a tradução, conteúdo visível e dados técnicos da requisição podem ser processados por terceiros. Avalie sua política de privacidade antes de habilitar o recurso em fóruns privados.
 
 ## Funcionamento e limitações
 
@@ -79,21 +80,23 @@ GTranslate e Google Translate são serviços externos. Ao usar a tradução, con
 - A tradução é automática e pode conter erros.
 - A versão gratuita funciona no navegador, usa cookies ou sessão e não cria URLs traduzidas indexáveis.
 - As traduções da versão gratuita não são armazenadas e não oferecem benefício de SEO.
-- Bloqueadores de conteúdo, políticas CSP ou filtros de rede podem impedir o carregamento do widget.
+- Bloqueadores de conteúdo, políticas CSP ou filtros de rede ainda podem impedir o serviço de tradução, mas o seletor local continuará visível e exibirá um aviso claro.
 - Quando outro GTranslate já está presente, a tradução individual é desativada com um aviso para evitar disputa por `window.gtranslateSettings`.
-- A integração usa o script remoto `widgets/latest/dwf.js`; mudanças futuras do fornecedor podem exigir atualização da extensão.
+- A interface não depende mais do script remoto `widgets/latest/dwf.js`; os idiomas configurados são renderizados pela própria extensão.
 
 ## Compatibilidade com CSP
 
-O código próprio da extensão não depende de JavaScript inline. Entretanto, a política CSP do fórum precisa permitir os domínios utilizados pelo widget externo. Consulte a documentação atual do GTranslate antes de alterar sua política.
+O código próprio da extensão não depende de JavaScript inline. A política CSP do fórum precisa permitir, em `script-src`, `style-src` e `connect-src` conforme aplicável, os recursos oficiais usados pelo Google Translate, incluindo `translate.googleapis.com`, `translate-pa.googleapis.com`, `translate.google.com` e `www.gstatic.com`.
 
-## Atualização para 1.6.3
+## Atualização para 1.6.5
 
-Ao atualizar da série 1.5.x, as migrações criam automaticamente as opções de carregamento sob demanda, memorização do idioma, modo da lista de fóruns, paleta e idiomas específicos por fórum. A antiga opção “Modo de compatibilidade” deixa de ser utilizada e é substituída pela opção mais clara “Carregar somente após o clique”. A atualização para 1.6.3 preserva as configurações existentes; todos os fóruns começam usando o idioma global até que uma substituição seja escolhida.
+Ao atualizar da série 1.5.x, as migrações criam automaticamente as opções de carregamento sob demanda, memorização do idioma, modo da lista de fóruns, paleta e idiomas específicos por fórum. A antiga opção “Modo de compatibilidade” deixa de ser utilizada e é substituída pela opção mais clara “Carregar somente após o clique”. A atualização para 1.6.5 preserva as configurações existentes; todos os fóruns começam usando o idioma global até que uma substituição seja escolhida. Limpe o cache do phpBB e o cache do navegador para substituir o JavaScript e o CSS das versões anteriores.
 
 ## Licença
 
 GPL-2.0-or-later.
+
+As bandeiras SVG são provenientes do projeto Flag Icons 7.5.0. A licença MIT correspondente está incluída em `styles/prosilver/theme/images/flags/LICENSE.flag-icons`.
 
 ## Suporte
 

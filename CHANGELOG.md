@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.6.5
+
+### Seletor de idiomas com bandeiras
+
+- Restauradas as bandeiras ao lado dos nomes dos idiomas no botão e nas opções do menu suspenso.
+- Adicionado um menu personalizado e acessível, com suporte a mouse, toque, teclado, foco, `aria-expanded` e `aria-selected`.
+- O seletor nativo permanece sincronizado internamente para preservar a integração com a tradução, detecção do navegador e repetição do último idioma.
+- As bandeiras SVG são fornecidas localmente pela extensão e não dependem do CDN do GTranslate, mantendo a correção de compatibilidade com Brave da versão 1.6.4.
+- Adicionado suporte visual completo para as paletas clara e escura e para dispositivos móveis.
+- Os recursos de bandeiras utilizam o projeto Flag Icons 7.5.0, distribuído sob a licença MIT incluída no pacote.
+
+## 1.6.4
+
+### Compatibilidade com Brave e bloqueadores
+
+- O menu de idiomas agora é renderizado localmente pela extensão e aparece imediatamente, sem depender da criação da interface por um script de terceiros.
+- Removida a dependência de execução do `widgets/latest/dwf.js`, que podia ser bloqueado pelo Brave Shields e cuja marcação deixou de ser compatível com o seletor esperado pela extensão.
+- O carregamento usa primeiro o endpoint `translate.googleapis.com`, reconhecido pelo mecanismo de tradução do Brave, com uma segunda origem oficial como alternativa.
+- Quando todas as origens são bloqueadas, o post original é restaurado e o seletor permanece visível com uma mensagem de erro clara.
+- A integração continua carregada somente sob demanda por padrão e mantém a detecção de conflito com outros widgets GTranslate/Google Translate.
+
+### Interface e robustez
+
+- O seletor local preserva os idiomas configurados no ACP, o idioma original específico do fórum, nomes nativos, detecção do idioma do navegador e repetição do último idioma.
+- Corrigida a compatibilidade com a marcação atual do widget GTranslate, que passou a usar um menu baseado em elementos `div` em vez do `select` anteriormente esperado.
+- Adicionados cancelamento seguro de traduções pendentes, tentativa automática por uma origem alternativa e restauração do conteúdo original em falhas de rede.
+
 ## 1.6.3
 
 ### Idioma por fórum
