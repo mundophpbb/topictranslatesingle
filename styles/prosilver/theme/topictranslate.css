@@ -99,9 +99,28 @@
     outline: 2px solid transparent;
 }
 
-.topictranslate-popover .gtranslate_wrapper select,
-.topictranslate-popover select.gt_selector {
-    display: block;
+.topictranslate-language-picker {
+    position: relative;
+}
+
+.topictranslate-language--native {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+.topictranslate-picker-toggle,
+.topictranslate-picker-option {
+    display: flex;
+    align-items: center;
+    gap: 9px;
     width: 100%;
     min-height: 36px;
     padding: 6px 8px;
@@ -110,19 +129,203 @@
     border: 1px solid var(--tts-border);
     border-radius: 5px;
     font-size: 14px;
+    font-family: inherit;
+    line-height: 1.3;
+    text-align: start;
+    box-sizing: border-box;
+    appearance: none;
     cursor: pointer;
 }
 
-.topictranslate-popover .gtranslate_wrapper select:focus,
-.topictranslate-popover select.gt_selector:focus,
+.topictranslate-picker-toggle {
+    position: relative;
+    padding-inline-end: 30px;
+}
+
+.topictranslate-picker-toggle:hover,
+.topictranslate-picker-option:hover,
+.topictranslate-picker-option:focus,
+.topictranslate-picker-option--selected {
+    background: var(--tts-control-hover);
+}
+
+.topictranslate-picker-toggle:focus,
+.topictranslate-picker-option:focus,
 .topictranslate-actions .button:focus {
     outline: 2px solid var(--tts-accent);
     outline-offset: 2px;
 }
 
-.topictranslate-popover--loading .gtranslate_wrapper select,
-.topictranslate-popover--loading select.gt_selector {
+.topictranslate-picker-label {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.topictranslate-picker-arrow {
+    position: absolute;
+    inset-inline-end: 11px;
+    width: 7px;
+    height: 7px;
+    border-inline-end: 2px solid currentColor;
+    border-block-end: 2px solid currentColor;
+    transform: rotate(45deg) translateY(-2px);
+    transition: transform 0.16s ease;
+}
+
+.topictranslate-language-picker--open .topictranslate-picker-arrow {
+    transform: rotate(225deg) translate(-2px, -2px);
+}
+
+.topictranslate-picker-menu {
+    position: absolute;
+    z-index: 2;
+    inset-block-start: calc(100% + 4px);
+    inset-inline: 0;
+    max-height: 242px;
+    overflow-y: auto;
+    padding: 4px;
+    background: var(--tts-background);
+    border: 1px solid var(--tts-border);
+    border-radius: 6px;
+    box-shadow: 0 8px 20px var(--tts-shadow);
+}
+
+.topictranslate-picker-menu[hidden] {
+    display: none;
+}
+
+.topictranslate-picker-option {
+    min-height: 34px;
+    border: 0;
+    border-radius: 4px;
+}
+
+.topictranslate-flag {
+    display: inline-block;
+    flex: 0 0 24px;
+    width: 24px;
+    height: 18px;
+    overflow: hidden;
+    background-color: var(--tts-control);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.16);
+}
+
+.topictranslate-flag--af { background-image: url("./images/flags/af.svg"); }
+.topictranslate-flag--al { background-image: url("./images/flags/al.svg"); }
+.topictranslate-flag--am { background-image: url("./images/flags/am.svg"); }
+.topictranslate-flag--az { background-image: url("./images/flags/az.svg"); }
+.topictranslate-flag--ba { background-image: url("./images/flags/ba.svg"); }
+.topictranslate-flag--bd { background-image: url("./images/flags/bd.svg"); }
+.topictranslate-flag--bg { background-image: url("./images/flags/bg.svg"); }
+.topictranslate-flag--by { background-image: url("./images/flags/by.svg"); }
+.topictranslate-flag--cn { background-image: url("./images/flags/cn.svg"); }
+.topictranslate-flag--cz { background-image: url("./images/flags/cz.svg"); }
+.topictranslate-flag--de { background-image: url("./images/flags/de.svg"); }
+.topictranslate-flag--dk { background-image: url("./images/flags/dk.svg"); }
+.topictranslate-flag--ee { background-image: url("./images/flags/ee.svg"); }
+.topictranslate-flag--es { background-image: url("./images/flags/es.svg"); }
+.topictranslate-flag--et { background-image: url("./images/flags/et.svg"); }
+.topictranslate-flag--fi { background-image: url("./images/flags/fi.svg"); }
+.topictranslate-flag--fr { background-image: url("./images/flags/fr.svg"); }
+.topictranslate-flag--gb { background-image: url("./images/flags/gb.svg"); }
+.topictranslate-flag--ge { background-image: url("./images/flags/ge.svg"); }
+.topictranslate-flag--gr { background-image: url("./images/flags/gr.svg"); }
+.topictranslate-flag--hr { background-image: url("./images/flags/hr.svg"); }
+.topictranslate-flag--ht { background-image: url("./images/flags/ht.svg"); }
+.topictranslate-flag--hu { background-image: url("./images/flags/hu.svg"); }
+.topictranslate-flag--id { background-image: url("./images/flags/id.svg"); }
+.topictranslate-flag--ie { background-image: url("./images/flags/ie.svg"); }
+.topictranslate-flag--il { background-image: url("./images/flags/il.svg"); }
+.topictranslate-flag--in { background-image: url("./images/flags/in.svg"); }
+.topictranslate-flag--iq { background-image: url("./images/flags/iq.svg"); }
+.topictranslate-flag--ir { background-image: url("./images/flags/ir.svg"); }
+.topictranslate-flag--is { background-image: url("./images/flags/is.svg"); }
+.topictranslate-flag--it { background-image: url("./images/flags/it.svg"); }
+.topictranslate-flag--jp { background-image: url("./images/flags/jp.svg"); }
+.topictranslate-flag--kg { background-image: url("./images/flags/kg.svg"); }
+.topictranslate-flag--kh { background-image: url("./images/flags/kh.svg"); }
+.topictranslate-flag--kr { background-image: url("./images/flags/kr.svg"); }
+.topictranslate-flag--kz { background-image: url("./images/flags/kz.svg"); }
+.topictranslate-flag--la { background-image: url("./images/flags/la.svg"); }
+.topictranslate-flag--lk { background-image: url("./images/flags/lk.svg"); }
+.topictranslate-flag--ls { background-image: url("./images/flags/ls.svg"); }
+.topictranslate-flag--lt { background-image: url("./images/flags/lt.svg"); }
+.topictranslate-flag--lu { background-image: url("./images/flags/lu.svg"); }
+.topictranslate-flag--lv { background-image: url("./images/flags/lv.svg"); }
+.topictranslate-flag--mg { background-image: url("./images/flags/mg.svg"); }
+.topictranslate-flag--mk { background-image: url("./images/flags/mk.svg"); }
+.topictranslate-flag--mm { background-image: url("./images/flags/mm.svg"); }
+.topictranslate-flag--mn { background-image: url("./images/flags/mn.svg"); }
+.topictranslate-flag--mt { background-image: url("./images/flags/mt.svg"); }
+.topictranslate-flag--mw { background-image: url("./images/flags/mw.svg"); }
+.topictranslate-flag--my { background-image: url("./images/flags/my.svg"); }
+.topictranslate-flag--ng { background-image: url("./images/flags/ng.svg"); }
+.topictranslate-flag--nl { background-image: url("./images/flags/nl.svg"); }
+.topictranslate-flag--no { background-image: url("./images/flags/no.svg"); }
+.topictranslate-flag--np { background-image: url("./images/flags/np.svg"); }
+.topictranslate-flag--nz { background-image: url("./images/flags/nz.svg"); }
+.topictranslate-flag--ph { background-image: url("./images/flags/ph.svg"); }
+.topictranslate-flag--pk { background-image: url("./images/flags/pk.svg"); }
+.topictranslate-flag--pl { background-image: url("./images/flags/pl.svg"); }
+.topictranslate-flag--pt { background-image: url("./images/flags/pt.svg"); }
+.topictranslate-flag--ro { background-image: url("./images/flags/ro.svg"); }
+.topictranslate-flag--rs { background-image: url("./images/flags/rs.svg"); }
+.topictranslate-flag--ru { background-image: url("./images/flags/ru.svg"); }
+.topictranslate-flag--sa { background-image: url("./images/flags/sa.svg"); }
+.topictranslate-flag--se { background-image: url("./images/flags/se.svg"); }
+.topictranslate-flag--si { background-image: url("./images/flags/si.svg"); }
+.topictranslate-flag--sk { background-image: url("./images/flags/sk.svg"); }
+.topictranslate-flag--so { background-image: url("./images/flags/so.svg"); }
+.topictranslate-flag--th { background-image: url("./images/flags/th.svg"); }
+.topictranslate-flag--tj { background-image: url("./images/flags/tj.svg"); }
+.topictranslate-flag--tr { background-image: url("./images/flags/tr.svg"); }
+.topictranslate-flag--tw { background-image: url("./images/flags/tw.svg"); }
+.topictranslate-flag--tz { background-image: url("./images/flags/tz.svg"); }
+.topictranslate-flag--ua { background-image: url("./images/flags/ua.svg"); }
+.topictranslate-flag--un { background-image: url("./images/flags/un.svg"); }
+.topictranslate-flag--us { background-image: url("./images/flags/us.svg"); }
+.topictranslate-flag--uz { background-image: url("./images/flags/uz.svg"); }
+.topictranslate-flag--va { background-image: url("./images/flags/va.svg"); }
+.topictranslate-flag--vn { background-image: url("./images/flags/vn.svg"); }
+.topictranslate-flag--ws { background-image: url("./images/flags/ws.svg"); }
+.topictranslate-flag--za { background-image: url("./images/flags/za.svg"); }
+.topictranslate-flag--zw { background-image: url("./images/flags/zw.svg"); }
+
+.topictranslate-popover--loading .topictranslate-picker-toggle {
     opacity: 0.65;
+}
+
+.topictranslate-picker-toggle:disabled {
+    cursor: not-allowed;
+}
+
+.topictranslate-popover--loading .topictranslate-picker-toggle:disabled {
+    cursor: progress;
+}
+
+.topictranslate-service,
+.topictranslate-service .skiptranslate,
+#topictranslate-google-element {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+}
+
+body > .skiptranslate,
+iframe.goog-te-banner-frame {
+    display: none !important;
+}
+
+body {
+    top: 0 !important;
 }
 
 .topictranslate-status {
@@ -251,10 +454,14 @@
         transform: translate(50%, -50%);
     }
 
-    .topictranslate-popover .gtranslate_wrapper select,
-    .topictranslate-popover select.gt_selector {
+    .topictranslate-picker-toggle,
+    .topictranslate-picker-option {
         min-height: 44px;
         font-size: 16px;
+    }
+
+    .topictranslate-picker-menu {
+        max-height: min(300px, 50vh);
     }
 }
 

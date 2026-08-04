@@ -16,7 +16,8 @@
     data-remember-language="{{ GTRANSLATE_REMEMBER_LANGUAGE ? '1' : '0' }}"
     data-cookie-domain="{{ GTRANSLATE_COOKIE_DOMAIN|e('html_attr') }}"
     data-cookie-path="{{ GTRANSLATE_COOKIE_PATH|e('html_attr') }}"
-    data-script-src="https://cdn.gtranslate.net/widgets/latest/dwf.js"
+    data-script-src="https://translate.googleapis.com/translate_a/element.js?cb=topicTranslateGoogleInit"
+    data-script-fallback-src="https://translate.google.com/translate_a/element.js?cb=topicTranslateGoogleInit"
     data-loading-label="{{ lang('TOPIC_TRANSLATE_LOADING')|e('html_attr') }}"
     data-blocked-label="{{ lang('TOPIC_TRANSLATE_WIDGET_BLOCKED')|e('html_attr') }}"
     data-conflict-label="{{ lang('TOPIC_TRANSLATE_WIDGET_CONFLICT')|e('html_attr') }}"
@@ -30,7 +31,21 @@
         </button>
     </div>
 
-    <div class="gtranslate_wrapper" aria-label="{{ lang('TOPIC_TRANSLATE_LANGUAGE_SELECTOR') }}"></div>
+    <div class="topictranslate-language-picker" data-topictranslate-picker="1">
+        <label class="sr-only" for="topictranslate-language">{{ lang('TOPIC_TRANSLATE_LANGUAGE_SELECTOR') }}</label>
+        <select id="topictranslate-language" class="topictranslate-language topictranslate-language--native" data-topictranslate-language="1" aria-label="{{ lang('TOPIC_TRANSLATE_LANGUAGE_SELECTOR') }}" aria-hidden="true" tabindex="-1">
+            <option value="{{ GTRANSLATE_DEFAULT_LANGUAGE|e('html_attr') }}" data-topictranslate-source="1" data-flag="{{ GTRANSLATE_DEFAULT_LANGUAGE_FLAG|e('html_attr') }}">{{ lang('TOPIC_TRANSLATE_ORIGINAL_LANGUAGE') }}: {{ GTRANSLATE_DEFAULT_LANGUAGE_NAME }}</option>
+            {% for language in GTRANSLATE_LANGUAGE_OPTIONS %}
+                <option value="{{ language.CODE|e('html_attr') }}" data-language-code="{{ language.CODE|e('html_attr') }}" data-flag="{{ language.FLAG|e('html_attr') }}">{{ language.NAME }}</option>
+            {% endfor %}
+        </select>
+        <button type="button" class="topictranslate-picker-toggle" data-topictranslate-picker-toggle="1" aria-label="{{ lang('TOPIC_TRANSLATE_LANGUAGE_SELECTOR') }}" aria-haspopup="listbox" aria-controls="topictranslate-language-menu" aria-expanded="false"></button>
+        <div id="topictranslate-language-menu" class="topictranslate-picker-menu" data-topictranslate-picker-menu="1" role="listbox" aria-label="{{ lang('TOPIC_TRANSLATE_LANGUAGE_SELECTOR') }}" hidden></div>
+    </div>
+
+    <div class="topictranslate-service" data-topictranslate-service="1" aria-hidden="true">
+        <div id="topictranslate-google-element"></div>
+    </div>
 
     <p class="topictranslate-status" data-topictranslate-status="1" role="status" aria-live="polite" hidden></p>
 
